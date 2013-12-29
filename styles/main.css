@@ -1,0 +1,123 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background-color: black;
+  overflow: hidden;
+  font-family: arial;
+}
+
+.hidden {
+  display: none;
+}
+
+#logo {
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+  background-size: 100%;
+  background-image: url("../images/logo.jpg");
+}
+
+.sidebar {
+
+  background-color: rgba(0,0,0,0.85);
+}
+
+/* table of contents of the slides */
+#catalogue {
+  position: absolute;
+  width: 200px;
+  height: 600px;
+  top: 50%;
+  left: -190px;
+  margin: -300px 0;
+  border: solid white;
+  border-width: 1px 1px 1px 0px;
+  border-radius: 0px 10px 10px 0px;
+}
+
+#catalogue-header {
+  color: black;
+  background: white;
+  border: solid black;
+  border-width: 2px 2px 2px 0px;
+  border-radius: 0px 10px 0px 0px;
+  text-align: center;
+}
+
+/* configuration panel for the slides */
+#effect {
+  position: absolute;
+  width: 200px;
+  height: 600px;
+  top: 50%;
+  right: -190px;
+  margin: -300px 0;
+  border: solid white;
+  border-width: 1px 0px 1px 1px;
+  border-radius: 10px 0px 0px 10px;
+}
+
+#effect-header {
+  color: black;
+  background: white;
+  border: solid black;
+  border-width: 2px 0px 2px 2px;
+  border-radius: 10px 0px 0px 0px;
+  text-align: center;
+}
+
+.effect-group li {
+  color: white;
+  list-style-type:none;
+  margin-bottom: 20px;
+}
+
+#container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.slide {
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(255,162,255,0.5);
+
+	cursor: default;
+}
+.slide:hover {
+  border: 10px solid rgba(255,255,255,1.0);
+	box-shadow: 0px 0px 30px rgba(255,255,255,1.0);
+}
+.slide .number {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	font-size: 15px;
+	color: white;
+  text-shadow: 0 0 10px rgba(255,255,255,0.95);
+}
+.slide .banner {
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  right: 0px;
+  height: 120px;
+  font-size: 60px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 10px rgba(255,255,255,0.95);
+  text-align: center;
+}
+.slide .content {
+  position: absolute;
+  top: 150px;
+  right: 30px;
+  bottom: 30px;
+  left: 30px;
+  font-size: 20px;
+  color: rgba(255,255,255,0.75);
+  text-align: left;
+}
