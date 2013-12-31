@@ -215,8 +215,11 @@ function render() {
 
 function makeCenterEffect(index) {
   return function () {
-    //
-    controls.removeEventListener('change', render);
+    // pause the controls
+    controls.noPan = true;
+    controls.noRoll = true;
+    controls.noRotate = true;
+    controls.noZoom = true;
 
   	var jSelectedSlide = $(objects[index].element);
   	var jOtherSlides = $('.slide').not(objects[index].element);
@@ -240,7 +243,7 @@ function makeCenterEffect(index) {
     objects[index].translateY(-targets.table[index].position.y);
 
   	// turn to the screen
-  	controls.reset();
+  	// controls.reset();
     var vector = new THREE.Vector3(0, 0, cameraDist);
 	  objects[index].lookAt(vector);
 
@@ -283,7 +286,7 @@ function turnToNewSlide(type) {
 function hideCurrentSlide(index, duration) {
   var object = objects[index];
   var target = targets.table[index];
-  // TWEEN.removeAll();
+  TWEEN.removeAll();
 
   new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
     z: target.position.z}, Math.random() * duration + duration)
@@ -292,7 +295,6 @@ function hideCurrentSlide(index, duration) {
   new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
     z: target.rotation.z}, Math.random() * duration + duration)
     .easing(TWEEN.Easing.Exponential.InOut).start();
-  
 
   new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
 }

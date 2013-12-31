@@ -87,10 +87,10 @@ body {
 
 	cursor: default;
 }
-.slide:hover {
+/*.slide:hover {
   border: 10px solid rgba(255,255,255,1.0);
 	box-shadow: 0px 0px 30px rgba(255,255,255,1.0);
-}
+}*/
 .slide .number {
 	position: absolute;
 	right: 20px;
