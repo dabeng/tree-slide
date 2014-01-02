@@ -13,81 +13,12 @@
 
   });
 
-  function init() {
-
-   // layout
-   $('#effect').on('mouseenter', function(){
-     if(!$(this).is(':animated')) {
-       $(this).animate({'right': '0px'}, 'slow');
-     }
-   });
-
-   $('#effect').on('mouseleave', function(){
-     if(!$(this).is(':animated')) {
-       $(this).animate({'right': '-190px'}, 'slow');
-     }
-   });
-
-   $('#catalogue').on('mouseenter', function(){
-   	 if(!$(this).is(':animated')) {
-       $(this).animate({'left': '0px'}, 'slow');
-     }
-   });
-
-   $('#catalogue').on('mouseleave', function(){
-   	 if(!$(this).is(':animated')) {
-       $(this).animate({'left': '-190px'}, 'slow');
-     }
-   });
-
-    // left, top, right and down keys
-    $(document).on('keyup', function(event) {
-      switch(event.which) {
-        case 37: {
-          if($('#container').is('.multipleSlide')) {
-            focusLeftSlide();
-          }
-          else if($('#container').is('.singleSlide')) {
-            turnToNewSlide('previous');
-          }
-          break;
-        }
-        case 38: {
-          if($('#container').is('.multipleSlide')) {
-            focusUpSlide();
-          }
-          else if($('#container').is('.singleSlide')) {
-            turnToNewSlide('previous');
-          }
-          break;
-        }
-        case 39: {
-          if($('#container').is('.multipleSlide')) {
-            focusRightSlide();
-          }
-          else if($('#container').is('.singleSlide')) {
-          	turnToNewSlide('next');
-          }
-          break;
-        }
-        case 40: {
-          if($('#container').is('.multipleSlide')) {
-            focusDownSlide();
-          }
-          else if($('#container').is('.singleSlide')) {
-            turnToNewSlide('next');
-          }
-          break;
-        }
-      }
-    });
-
-
+function init() {
     var aspect = window.innerWidth / window.innerHeight;
-	camera = new THREE.PerspectiveCamera(fov, aspect, 0, 10000);
+	  camera = new THREE.PerspectiveCamera(fov, aspect, 0, 10000);
 
-	camera.position.z = cameraDist;
-	scene = new THREE.Scene();
+	  camera.position.z = cameraDist;
+	  scene = new THREE.Scene();
     var vector = new THREE.Vector3();
 
     var nearPlaneHeight = cameraDist * Math.tan(fov / 2 * pi) * 2;
@@ -97,11 +28,10 @@
 
     var rowColNum = getRowCol(datasource.length);
     var rowCount = rowColNum.row;
-	var rowHeight = Math.round((nearPlaneHeight - (rowCount-1) * margin
-		) / rowCount);
-	var colCount = rowColNum.col;
+	  var rowHeight = Math.round((nearPlaneHeight - (rowCount - 1) * margin) / rowCount);
+	  var colCount = rowColNum.col;
     var colWidth = Math.round((nearPlaneWidth - (colCount - 1) * margin) / colCount);
-
+    var originalSize = {'width': colWidth, 'height': rowHeight};
 
 	// 3D table
 	$.each(datasource, function(index, slide) {
@@ -114,14 +44,14 @@
 	  jSlide.append($('<div>', { 'class': 'banner', 'text': slide['name'] }));
 	  jSlide.append($('<div>', { 'class': 'content'}).html(slide['fullname']));
 
-	  jSlide.on('dblclick', makeCenterEffect(index));
+	  jSlide.on('dblclick', makeCenterEffect(index, 500, originalSize));
 
-	  var css3dObject = new THREE.CSS3DObject( jSlide[0] );
+	  var css3dObject = new THREE.CSS3DObject(jSlide[0]);
 	  css3dObject.position.x = Math.random() * 4000 - 2000;
 	  css3dObject.position.y = Math.random() * 4000 - 2000;
 	  css3dObject.position.z = Math.random() * 4000 - 2000;
-	  scene.add( css3dObject );
-	  objects.push( css3dObject );
+	  scene.add(css3dObject);
+	  objects.push(css3dObject);
 
       var object3D = new THREE.Object3D();
 	  object3D.position.x = -(colCount * (colWidth + margin) - margin) / 2
@@ -131,8 +61,6 @@
 	
 	  targets.table.push(object3D);
     });
-
-
 
 
     var count = objects.length;
@@ -173,7 +101,75 @@
 
 	//
 	$(window).on('resize', onWindowResize);
-  }
+
+  // layout
+  $('#effect').on('mouseenter', function(){
+    if(!$(this).is(':animated')) {
+      $(this).animate({'right': '0px'}, 'slow');
+    }
+  });
+
+  $('#effect').on('mouseleave', function(){
+    if(!$(this).is(':animated')) {
+      $(this).animate({'right': '-190px'}, 'slow');
+    }
+  });
+
+  $('#catalogue').on('mouseenter', function(){
+    if(!$(this).is(':animated')) {
+      $(this).animate({'left': '0px'}, 'slow');
+    }
+  });
+
+  $('#catalogue').on('mouseleave', function(){
+    if(!$(this).is(':animated')) {
+      $(this).animate({'left': '-190px'}, 'slow');
+    }
+  });
+
+  // left, top, right and down keys
+  $(document).on('keyup', function(event) {
+    switch(event.which) {
+      case 37: {
+        if($('#container').is('.multipleSlide')) {
+          focusLeftSlide();
+        }
+        else if($('#container').is('.singleSlide')) {
+          turnToNewSlide('previous', originalSize);
+        }
+        break;
+      }
+      case 38: {
+        if($('#container').is('.multipleSlide')) {
+          focusUpSlide();
+        }
+        else if($('#container').is('.singleSlide')) {
+          turnToNewSlide('previous', originalSize);
+        }
+        break;
+      }
+      case 39: {
+        if($('#container').is('.multipleSlide')) {
+          focusRightSlide();
+        }
+        else if($('#container').is('.singleSlide')) {
+          turnToNewSlide('next', originalSize);
+        }
+        break;
+      }
+      case 40: {
+        if($('#container').is('.multipleSlide')) {
+          focusDownSlide();
+        }
+        else if($('#container').is('.singleSlide')) {
+          turnToNewSlide('next', originalSize);
+        }
+        break;
+      }
+    }
+  });
+
+}
 
 function transform(targets, duration) {
   TWEEN.removeAll();
@@ -213,7 +209,7 @@ function render() {
   renderer.render(scene, camera);
 }
 
-function makeCenterEffect(index) {
+function makeCenterEffect(index, duration, originalSize) {
   return function () {
     // pause the controls
     controls.noPan = true;
@@ -221,8 +217,10 @@ function makeCenterEffect(index) {
     controls.noRotate = true;
     controls.noZoom = true;
 
-  	var jSelectedSlide = $(objects[index].element);
-  	var jOtherSlides = $('.slide').not(objects[index].element);
+    var object = objects[index];
+    var target = targets.table[index];
+  	var jSelectedSlide = $(object.element);
+  	var jOtherSlides = $('.slide').not(object.element);
 
     // set the current view mode to sigleSlide
     $('#container').removeClass();
@@ -238,27 +236,34 @@ function makeCenterEffect(index) {
     // hide other slides
     jOtherSlides.addClass('hidden');
 
-    // move to the origin
-    objects[index].translateX(-targets.table[index].position.x);
-    objects[index].translateY(-targets.table[index].position.y);
-
   	// turn to the screen
-  	// controls.reset();
-    var vector = new THREE.Vector3(0, 0, cameraDist);
-	  objects[index].lookAt(vector);
+  	controls.reset();
 
     // fit into render area by HEIGHT
-    $(objects[index].element).css({'width': '800px', 'height': '600px'});
-
-	  objects[index].translateZ(cameraDist - ((window.innerHeight / 2) / Math.tan(fov / 2 * pi)));
-
-	  // re-render the scene
-	  render();
+    new TWEEN.Tween(object.position)
+      .to({x: 0, y: 0, z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .start();
+    new TWEEN.Tween({'width': originalSize.width, 'height': originalSize.height})
+      .to({'width': 800, 'height': 600}, duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(function() {
+          $(object.element).css({'width': this.width, 'height': this.height});
+      })
+      .start();
+    new TWEEN.Tween(object.rotation)
+      .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .start();
+    new TWEEN.Tween(window)
+      .to({}, duration * 2)
+      .onUpdate(render)
+      .start();
   };
 }
 
 // turn to new slide according to the current slide
-function turnToNewSlide(type) {
+function turnToNewSlide(type, originalSize) {
   var index = $('.currentSlide').prop('data-index');
   // determine whether it can be turned to the new slide
   if(type === 'next') {
@@ -272,36 +277,55 @@ function turnToNewSlide(type) {
   }
 
   // hide the current slide
-  hideCurrentSlide(index, 500);
+  hideCurrentSlide(index, 500, originalSize);
 
   // show the new slide
   if(type === 'next') {
-    showNewSlide(index + 1, 500);
+    showNewSlide(index + 1, 500, originalSize);
   } else {
-    showNewSlide(index - 1, 500);
+    showNewSlide(index - 1, 500, originalSize);
   }
 }
 
 
-function hideCurrentSlide(index, duration) {
+function hideCurrentSlide(index, duration, originalSize) {
   var object = objects[index];
   var target = targets.table[index];
-  TWEEN.removeAll();
+  var jSelectedSlide = $(object.element);
+  var jOtherSlides = $('.slide').not(object.element);
 
-  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
-    z: target.position.z}, Math.random() * duration + duration)
-    .easing(TWEEN.Easing.Exponential.InOut).start();
+  new TWEEN.Tween(object.position)
+    .to({x: target.position.x, y: target.position.y, z: target.position.z}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut)
+    .onStart(function() {
+        jSelectedSlide.removeClass('hidden');
+    })
+    .onComplete(function() {
+        jSelectedSlide.addClass('hidden');
+    })
+    .start();
 
-  new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
-    z: target.rotation.z}, Math.random() * duration + duration)
-    .easing(TWEEN.Easing.Exponential.InOut).start();
+  new TWEEN.Tween({'width': 800, 'height': 600})
+    .to({'width': originalSize.width, 'height': originalSize.height}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut)
+    .onUpdate(function() {
+        $(object.element).css({'width': this.width, 'height': this.height});
+    })
+    .start();
+
+  new TWEEN.Tween(object.rotation)
+    .to({x: 0, y: 0, z: 0}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut)
+    .start();
 
   new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
 }
 
-function showNewSlide(index, duration) {
-  var jSelectedSlide = $(objects[index].element);
-  var jOtherSlides = $('.slide').not(objects[index].element);
+function showNewSlide(index, duration, originalSize) {
+  var object = objects[index];
+  var target = targets.table[index];
+  var jSelectedSlide = $(object.element);
+  var jOtherSlides = $('.slide').not(object.element);
     
   // set flag to identify which slide is being read
   jOtherSlides.removeClass('currentSlide');
@@ -310,37 +334,30 @@ function showNewSlide(index, duration) {
   // create the data-index property of slide of jquery object
   $('.currentSlide').prop('data-index', index);
 
-  // show the focused slide and hide the other slides
-  jSelectedSlide.removeClass('hidden');
-  jOtherSlides.addClass('hidden');
-
-  // move to the origin
-  // objects[index].translateX(-targets.table[index].position.x);
-  // objects[index].translateY(-targets.table[index].position.y);
-
-  // turn to the screen
-  // controls.reset();
-  // var vector = new THREE.Vector3(0, 0, cameraDist);
-  // objects[index].lookAt(vector);
-
   // fit into render area by HEIGHT
-  $(objects[index].element).css({'width': '800px', 'height': '600px'});
-  // objects[index].translateZ(cameraDist - ((window.innerHeight / 2) / Math.tan(fov / 2 * pi)));
+  new TWEEN.Tween(object.position)
+    .to({x: 0, y: 0, z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut)
+    .onStart(function() {
+        jSelectedSlide.removeClass('hidden');
+    })
+    .start();
 
-  // re-render the scene
-  // render();
+  new TWEEN.Tween({'width': originalSize.width, 'height': originalSize.height})
+    .to({'width': 800, 'height': 600}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut)
+    .onUpdate(function() {
+        $(object.element).css({'width': this.width, 'height': this.height});
+    })
+    .start();
 
-    var object = objects[index];
-  var target = targets.table[index];
+  new TWEEN.Tween(object.rotation)
+    .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut)
+    .start();
 
-    new TWEEN.Tween(object.position).to({x: 0, y: 0,
-    z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, Math.random() * duration + duration)
-    .easing(TWEEN.Easing.Exponential.InOut).start();
-
-  new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
-    z: target.rotation.z}, Math.random() * duration + duration)
-    .easing(TWEEN.Easing.Exponential.InOut).start();
-
-
-  new TWEEN.Tween(window).to({}, duration).onUpdate(render).start();
+  new TWEEN.Tween(window)
+    .to({}, duration * 2)
+    .onUpdate(render)
+    .start();
 }
