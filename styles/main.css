@@ -20,6 +20,57 @@ body {
   background-image: url("../images/logo.jpg");
 }
 
+#navigatePanel {
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+}
+
+#triangle-up {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid white;
+  position: absolute;
+  left: 30px;
+}
+
+#triangle-right {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-left: 20px solid white;
+  border-bottom: 10px solid transparent;
+  position: absolute;
+  right: 0px;
+  bottom: 30px;
+} 
+
+#triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 20px solid white;
+  position: absolute;
+  left: 30px;
+  bottom: 0px;
+}
+
+#triangle-left {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 20px solid white;
+  border-bottom: 10px solid transparent;
+  position: absolute;
+  left: 0px;
+  bottom: 30px;
+}
+
 .sidebar {
 
   background-color: rgba(0,0,0,0.85);
