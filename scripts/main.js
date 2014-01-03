@@ -131,6 +131,7 @@ function init() {
   $(document).on('keyup', function(event) {
     switch(event.which) {
       case 37: {
+        $('#triangle-left').css('border-right','20px solid rgba(255,255,255,1)');
         if($('#container').is('.multipleSlide')) {
           focusLeftSlide();
         }
@@ -140,6 +141,7 @@ function init() {
         break;
       }
       case 38: {
+        $('#triangle-up').css('border-bottom','20px solid rgba(255,255,255,1)');
         if($('#container').is('.multipleSlide')) {
           focusUpSlide();
         }
@@ -149,6 +151,7 @@ function init() {
         break;
       }
       case 39: {
+        $('#triangle-right').css('border-left','20px solid rgba(255,255,255,1)');
         if($('#container').is('.multipleSlide')) {
           focusRightSlide();
         }
@@ -158,6 +161,7 @@ function init() {
         break;
       }
       case 40: {
+        $('#triangle-down').css('border-top','20px solid rgba(255,255,255,1)');
         if($('#container').is('.multipleSlide')) {
           focusDownSlide();
         }
