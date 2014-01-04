@@ -129,9 +129,15 @@ function init() {
 
   // left, top, right and down keys
   $(document).on('keyup', function(event) {
+    var animationPlayState;
+    if ($.browser.webkit) {
+      animationPlayState = '-webkit-animation-play-state';
+    } else {
+      animationPlayState = 'animation-play-state';
+    }
     switch(event.which) {
       case 37: {
-        $('#triangle-left').css('border-right','20px solid rgba(255,255,255,1)');
+        $('#triangle-left-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
           focusLeftSlide();
         }
@@ -141,7 +147,7 @@ function init() {
         break;
       }
       case 38: {
-        $('#triangle-up').css('border-bottom','20px solid rgba(255,255,255,1)');
+        $('#triangle-up-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
           focusUpSlide();
         }
@@ -151,7 +157,7 @@ function init() {
         break;
       }
       case 39: {
-        $('#triangle-right').css('border-left','20px solid rgba(255,255,255,1)');
+        $('#triangle-right-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
           focusRightSlide();
         }
@@ -161,7 +167,7 @@ function init() {
         break;
       }
       case 40: {
-        $('#triangle-down').css('border-top','20px solid rgba(255,255,255,1)');
+        $('#triangle-down-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
           focusDownSlide();
         }
@@ -172,6 +178,16 @@ function init() {
       }
     }
   });
+
+  // animation effect of navigation panel
+  var animationEndHandler= {'webkitAnimationEnd': function() {$(this).css('-webkit-animation-play-state', 'paused');},
+    'animationEnd' :function() {$(this).css('animation-play-state', 'paused');}};
+  $('#triangle-left-effect').on(animationEndHandler);
+  $('#triangle-up-effect').on(animationEndHandler);
+  $('#triangle-right-effect').on(animationEndHandler);
+  $('#triangle-down-effect').on(animationEndHandler);
+
+  
 
 }
 
