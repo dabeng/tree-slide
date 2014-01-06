@@ -7,7 +7,6 @@ var nearPlaneHeight;
 var nearPlaneWidth;
 var margin;
 var controls;
-var objects = [];
 var objects = {};
 var targets = {};
 
