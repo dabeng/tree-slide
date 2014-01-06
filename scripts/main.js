@@ -3,8 +3,10 @@ var cameraDist = 3000;
 var fov = 40;// field of view
 var pi = Math.PI / 180;
 var controls;
-var objects = {};
-var targets = {};
+var objects = [];
+var targets = {'table':[], 'sphere':[]};
+// var objects = {};
+// var targets = {};
 
 $(function($){
 	
@@ -157,7 +159,7 @@ function generate3DEffects() {
       case 37: {
         $('#triangle-left-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusLeftSlide();
+          focusSlide('left');
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('previous', originalSize);
@@ -167,7 +169,7 @@ function generate3DEffects() {
       case 38: {
         $('#triangle-up-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusUpSlide();
+          focusSlide('up');
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('previous', originalSize);
@@ -177,7 +179,7 @@ function generate3DEffects() {
       case 39: {
         $('#triangle-right-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusRightSlide();
+          focusSlide(right);
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('next', originalSize);
@@ -187,7 +189,7 @@ function generate3DEffects() {
       case 40: {
         $('#triangle-down-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusDownSlide();
+          focusSlide('down');
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('next', originalSize);
@@ -196,6 +198,21 @@ function generate3DEffects() {
       }
     }
   });
+}
+
+function focusSlide(direction) {
+  if($('.highlight').length === 0) {
+    $('.slide').not('.hidden').filter("article['data-index=0']").addClass('highlight');
+  } else {
+    switch(direction) {
+      case 'left': {
+        var targetIndex = $('.highlight').prop('data-index') -1;
+        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        break;
+      }
+
+    }
+  }
 }
 
 function generate3DPosition(arr, parentId) {
