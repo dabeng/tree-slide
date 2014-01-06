@@ -18,12 +18,11 @@ $(function($){
 });
 
 function init() {
-  // init global varibles used in 3D transforms
+  // init global varibles used in 3D transforms, and then generate 3d positions for all sldes except for first slide
   init3DScene();
-
-  // first of all, append required properties to the datasource of slides
-  // $.when(setRowCol(datasource)).done(generate3DEffects);
-  $.when(setRowColOfHierarchialArray(datasource.children)).done(generate3DEffects);
+  datasource['id'] = $('<div>').uniqueId().prop('id');
+  $.when(setRowColOfHierarchialArray(datasource.children))
+    .done(loopGenerate3DPosition(datasource.children, datasource.id));
 
   // bind event handlers for effect configuration panel
   $('#effect').on('mouseenter', function() {
@@ -86,10 +85,22 @@ function init3DScene() {
   controls.addEventListener('change', render);
 }
 
-/*
- * generate 3D effects based on three.js
-*/
-function generate3DEffects() {
+function loopGenerate3DPosition(arr, id) {
+  generate3DPosition(arr, id);
+  var count = arr.length;
+  for(var i = 0;i < count; i++) {
+    var children = arr[i].children;
+    var parentId = arr[i].id;
+    if (children) {
+      loopGenerate3DPosition(children, parentId);
+    }
+  }
+}
+
+function generate3DPosition(arr, parentId) {
+  objects[parentId] = [];
+  targets[parentId] = {"table": [], "sphere": []};
+
   var rowColNum = getRowCol(datasource.length);
   var rowCount = rowColNum.row;
   var rowHeight = Math.round((nearPlaneHeight - (rowCount - 1) * margin) / rowCount);
@@ -98,15 +109,16 @@ function generate3DEffects() {
   var originalSize = {'width': colWidth, 'height': rowHeight};
 
   // 3D table
-  $.each(datasource.children, function(index, slide) {
+  $.each(arr, function(index, slide) {
     var jSlide = $('<article>', { 'class': 'slide', 'css':{
       'width': colWidth,
       'height': rowHeight,
       'backgroundColor': 'rgba(51,0,51,' + (Math.random() * 0.5 + 0.25) + ')'}
     });
-    jSlide.append($('<div>', {'class': 'number', 'text': index + 1 }));
-    jSlide.append($('<div>', {'class': 'banner', 'text': slide['banner'] }));
-    jSlide.append($('<div>', {'class': 'content'}).html(slide['content']));
+
+    jSlide.append($('<div>', { 'class': 'number', 'text': index + 1 }));
+    jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
+    jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
 
     jSlide.on('dblclick', makeCenterEffect(index, 500, originalSize));
 
@@ -115,34 +127,48 @@ function generate3DEffects() {
     css3dObject.position.y = Math.random() * 4000 - 2000;
     css3dObject.position.z = Math.random() * 4000 - 2000;
     scene.add(css3dObject);
-    objects.push(css3dObject);
+
+    objects[parentId].push(css3dObject);
 
     var object3D = new THREE.Object3D();
     object3D.position.x = -(colCount * (colWidth + margin) - margin) / 2
       + (slide['col'] - 1) * (colWidth + margin) + colWidth / 2;
     object3D.position.y = (rowCount * (rowHeight + margin) - margin) / 2
       - (slide['row'] - 1) * (rowHeight + margin) - rowHeight / 2; 
-  
-    targets.table.push(object3D);
+    targets[parentId].table.push(object3D);
   });
 
 
-  var count = objects.length;
-  var phi, theta;
-  var vector = new THREE.Vector3();
   // sphere
+  var phi, theta;
   var diameter = Math.round(nearPlaneWidth/Math.PI);
-  for (i = 0; i < count; i++) {
+  var vector = new THREE.Vector3();
+  $.each(arr, function(index, slide) {
     var object3D = new THREE.Object3D();
-    phi = Math.acos(-1 + ( 2 * i ) / count);
-    theta = Math.sqrt(count * Math.PI) * phi;
+    phi = Math.acos(-1 + ( 2 * index ) / arr.length);
+    theta = Math.sqrt(arr.length * Math.PI) * phi;
     object3D.position.x = diameter * Math.cos(theta) * Math.sin(phi);
     object3D.position.y = diameter * Math.sin(theta) * Math.sin(phi);
     object3D.position.z = diameter * Math.cos(phi);
 
     vector.copy(object3D.position).multiplyScalar(2);
     object3D.lookAt(vector);
-    targets.sphere.push(object3D);
+
+    targets[parentId].sphere.push(object3D);
+  });
+
+}
+
+/*
+ * generate 3D effects based on three.js
+*/
+function generate3DEffects() {
+
+  for(var i = 0;i < count; i++) {
+    var children = arr[i].children;
+    if (children) {
+      generate3DPosition(children);
+    }
   }
 
   $('#effect-3dtable').on('click', function (event) { transform(targets.table, 1000 ); });
@@ -219,63 +245,6 @@ function focusSlide(direction) {
 
     }
   }
-}
-
-function generate3DPosition(arr, parentId) {
-  objects[parentId] = [];
-  targets[parentId] = {"table": [], "sphere": []};
-
-  // 3D table
-  $.each(datasource, function(index, slide) {
-    var jSlide = $('<article>', { 'class': 'slide', 'css':{
-      'width': colWidth,
-      'height': rowHeight,
-      'backgroundColor': 'rgba(51,0,51,' + (Math.random() * 0.5 + 0.25) + ')'}
-    });
-    // jSlide.uniqueId();
-    jSlide.append($('<div>', { 'class': 'number', 'text': index + 1 }));
-    jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
-    jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
-
-    jSlide.on('dblclick', makeCenterEffect(index, 500, originalSize));
-
-    var css3dObject = new THREE.CSS3DObject(jSlide[0]);
-    css3dObject.position.x = Math.random() * 4000 - 2000;
-    css3dObject.position.y = Math.random() * 4000 - 2000;
-    css3dObject.position.z = Math.random() * 4000 - 2000;
-    scene.add(css3dObject);
-
-    objects[parentId].push(css3dObject);
-
-    var object3D = new THREE.Object3D();
-    object3D.position.x = -(colCount * (colWidth + margin) - margin) / 2
-      + (slide['col'] - 1) * (colWidth + margin) + colWidth / 2;
-    object3D.position.y = (rowCount * (rowHeight + margin) - margin) / 2
-      - (slide['row'] - 1) * (rowHeight + margin) - rowHeight / 2; 
-    targets[parentId].table.push(object3D);
-  });
-
-
-  var count = objects.length;
-  var phi, theta;
-
-  // sphere
-  var diameter = Math.round(nearPlaneWidth/Math.PI);
-  var vector = new THREE.Vector3();
-  $.each(arr, function(index, slide) {
-    var object3D = new THREE.Object3D();
-    phi = Math.acos(-1 + ( 2 * index ) / count);
-    theta = Math.sqrt(count * Math.PI) * phi;
-    object3D.position.x = diameter * Math.cos(theta) * Math.sin(phi);
-    object3D.position.y = diameter * Math.sin(theta) * Math.sin(phi);
-    object3D.position.z = diameter * Math.cos(phi);
-
-    vector.copy(object3D.position).multiplyScalar(2);
-    object3D.lookAt(vector);
-
-    targets[parentId].sphere.push(object3D);
-  });
-
 }
 
 function transform(targets, duration) {

@@ -22,6 +22,7 @@ function setRowCol(source) {
   for (var i = 0 ; i < count ; i ++) {
   	source[i]['row'] = Math.ceil((i + 1) / rowNum);
   	source[i]['col'] = i + 1 - rowNum * (source[i]['row'] - 1);
+    source[i]['id'] = $('<div>').uniqueId().prop('id');
   }
 }
 
