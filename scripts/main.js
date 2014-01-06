@@ -251,7 +251,7 @@ function generate3DPosition(arr, parentId) {
     object3D.lookAt(vector);
 
     targets[parentId].sphere.push(object3D);
-  }
+  });
 
 }
 
