@@ -1,21 +1,29 @@
 var camera, scene, renderer;
-var cameraDist = 3000;
-var fov = 40;// field of view
+var cameraDist;
+var fov;// field of view
 var pi = Math.PI / 180;
+var aspect;
+var nearPlaneHeight;
+var nearPlaneWidth;
+var margin;
 var controls;
 var objects = [];
-var targets = {'table': [], 'sphere': [], 'helix': [], 'grid': []};
+var targets = {'table': [], 'sphere': []};
 
 $(function($){
 	
   init();
-  animate();
+  // animate();
 
 });
 
 function init() {
+  // init global varibles used in 3D transforms
+  init3DScene();
+
   // first of all, append required properties to the datasource of slides
-  $.when(setRowCol(datasource)).done(generate3DEffects);
+  // $.when(setRowCol(datasource)).done(generate3DEffects);
+  $.when(setRowColOfHierarchialArray(datasource.children)).done(generate3DEffects);
 
   // bind event handlers for effect configuration panel
   $('#effect').on('mouseenter', function() {
@@ -42,7 +50,7 @@ function init() {
   });
 
   // animation effect of navigation panel
-  var animationEndHandler= {
+  var animationEndHandler = {
     'webkitAnimationEnd': function() {$(this).css('-webkit-animation-play-state', 'paused');},
     'animationEnd' :function() {$(this).css('animation-play-state', 'paused');}
   };
@@ -53,22 +61,35 @@ function init() {
 
 }
 
+function init3DScene() {
+  fov = 40;
+  aspect = window.innerWidth / window.innerHeight;
+  cameraDist = 3000;
+  camera = new THREE.PerspectiveCamera(fov, aspect, 0, 10000);
+  camera.position.z = cameraDist;
+  scene = new THREE.Scene();
+  nearPlaneHeight = cameraDist * Math.tan(fov / 2 * pi) * 2;
+  nearPlaneWidth = nearPlaneHeight * (4 / 3);
+  margin = 20;
+
+  //
+  renderer = new THREE.CSS3DRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.domElement.style.position = 'absolute';
+  $('#container').append(renderer.domElement);
+
+  //
+  controls = new THREE.TrackballControls(camera, renderer.domElement);
+  controls.rotateSpeed = 0.5;
+  controls.minDistance = 500;
+  controls.maxDistance = 6000;
+  controls.addEventListener('change', render);
+}
+
 /*
  * generate 3D effects based on three.js
 */
 function generate3DEffects() {
-  var aspect = window.innerWidth / window.innerHeight;
-  camera = new THREE.PerspectiveCamera(fov, aspect, 0, 10000);
-
-  camera.position.z = cameraDist;
-  scene = new THREE.Scene();
-  var vector = new THREE.Vector3();
-
-  var nearPlaneHeight = cameraDist * Math.tan(fov / 2 * pi) * 2;
-  var nearPlaneWidth = nearPlaneHeight * (4 / 3);
-  var margin = 20
-
-
   var rowColNum = getRowCol(datasource.length);
   var rowCount = rowColNum.row;
   var rowHeight = Math.round((nearPlaneHeight - (rowCount - 1) * margin) / rowCount);
@@ -77,15 +98,15 @@ function generate3DEffects() {
   var originalSize = {'width': colWidth, 'height': rowHeight};
 
   // 3D table
-  $.each(datasource, function(index, slide) {
+  $.each(datasource.children, function(index, slide) {
     var jSlide = $('<article>', { 'class': 'slide', 'css':{
       'width': colWidth,
       'height': rowHeight,
       'backgroundColor': 'rgba(51,0,51,' + (Math.random() * 0.5 + 0.25) + ')'}
     });
-    jSlide.append($('<div>', { 'class': 'number', 'text': index + 1 }));
-    jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
-    jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
+    jSlide.append($('<div>', {'class': 'number', 'text': index + 1 }));
+    jSlide.append($('<div>', {'class': 'banner', 'text': slide['banner'] }));
+    jSlide.append($('<div>', {'class': 'content'}).html(slide['content']));
 
     jSlide.on('dblclick', makeCenterEffect(index, 500, originalSize));
 
@@ -108,7 +129,7 @@ function generate3DEffects() {
 
   var count = objects.length;
   var phi, theta;
-
+  var vector = new THREE.Vector3();
   // sphere
   var diameter = Math.round(nearPlaneWidth/Math.PI);
   for (i = 0; i < count; i++) {
@@ -123,19 +144,6 @@ function generate3DEffects() {
     object3D.lookAt(vector);
     targets.sphere.push(object3D);
   }
-
-  //
-  renderer = new THREE.CSS3DRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.domElement.style.position = 'absolute';
-  $('#container').append(renderer.domElement);
-
-  //
-  controls = new THREE.TrackballControls(camera, renderer.domElement);
-  controls.rotateSpeed = 0.5;
-  controls.minDistance = 500;
-  controls.maxDistance = 6000;
-  controls.addEventListener('change', render);
 
   $('#effect-3dtable').on('click', function (event) { transform(targets.table, 1000 ); });
   $('#effect-sphere').on('click', function (event) { transform(targets.sphere, 1000 ); });

@@ -13,7 +13,7 @@ function getRowCol(count) {
   }
 }
 
-// set row and column for every item of array
+// set row and column for every item of an array
 function setRowCol(source) {
   var count = source.length;
   var rowColNumbers = getRowCol(count);
@@ -22,5 +22,25 @@ function setRowCol(source) {
   for (var i = 0 ; i < count ; i ++) {
   	source[i]['row'] = Math.ceil((i + 1) / rowNum);
   	source[i]['col'] = i + 1 - rowNum * (source[i]['row'] - 1);
+  }
+}
+
+/*
+ * set row and column properties for hierarchial slide nodes,except for the first slide(or call it root slide).
+ * A sample of slide node is shown below: 
+ *   {
+ *     "banner": "someBaner",
+ *     "content": "someContent",
+ *     "children": []
+ *   }
+*/
+function setRowColOfHierarchialArray(arr) {
+  setRowCol(arr);
+  var count = arr.length;
+  for(var i = 0;i < count; i++) {
+    var children = arr[i].children;
+    if (children) {
+      setRowColOfHierarchialArray(children);
+    }
   }
 }
