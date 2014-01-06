@@ -7,8 +7,8 @@ var nearPlaneHeight;
 var nearPlaneWidth;
 var margin;
 var controls;
-var objects = [];
-var targets = {'table': [], 'sphere': []};
+var objects = {};
+var targets = {};
 
 $(function($){
 	
@@ -165,7 +165,7 @@ function generate3DEffects() {
       case 37: {
         $('#triangle-left-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusLeftSlide();
+          focusSlide('left');
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('previous', originalSize);
@@ -175,7 +175,7 @@ function generate3DEffects() {
       case 38: {
         $('#triangle-up-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusUpSlide();
+          focusSlide('up');
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('previous', originalSize);
@@ -185,7 +185,7 @@ function generate3DEffects() {
       case 39: {
         $('#triangle-right-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusRightSlide();
+          focusSlide(right);
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('next', originalSize);
@@ -195,7 +195,7 @@ function generate3DEffects() {
       case 40: {
         $('#triangle-down-effect').css(animationPlayState, 'running');
         if($('#container').is('.multipleSlide')) {
-          focusDownSlide();
+          focusSlide('down');
         }
         else if($('#container').is('.singleSlide')) {
           turnToNewSlide('next', originalSize);
@@ -204,6 +204,78 @@ function generate3DEffects() {
       }
     }
   });
+}
+
+function focusSlide(direction) {
+  if($('.highlight').length === 0) {
+    $('.slide').not('.hidden').filter("article['data-index=0']").addClass('highlight');
+  } else {
+    switch(direction) {
+      case 'left': {
+        var targetIndex = $('.highlight').prop('data-index') -1;
+        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        break;
+      }
+
+    }
+  }
+}
+
+function generate3DPosition(arr, parentId) {
+  objects[parentId] = [];
+  targets[parentId] = {"table": [], "sphere": []};
+
+  // 3D table
+  $.each(datasource, function(index, slide) {
+    var jSlide = $('<article>', { 'class': 'slide', 'css':{
+      'width': colWidth,
+      'height': rowHeight,
+      'backgroundColor': 'rgba(51,0,51,' + (Math.random() * 0.5 + 0.25) + ')'}
+    });
+    // jSlide.uniqueId();
+    jSlide.append($('<div>', { 'class': 'number', 'text': index + 1 }));
+    jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
+    jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
+
+    jSlide.on('dblclick', makeCenterEffect(index, 500, originalSize));
+
+    var css3dObject = new THREE.CSS3DObject(jSlide[0]);
+    css3dObject.position.x = Math.random() * 4000 - 2000;
+    css3dObject.position.y = Math.random() * 4000 - 2000;
+    css3dObject.position.z = Math.random() * 4000 - 2000;
+    scene.add(css3dObject);
+
+    objects[parentId].push(css3dObject);
+
+    var object3D = new THREE.Object3D();
+    object3D.position.x = -(colCount * (colWidth + margin) - margin) / 2
+      + (slide['col'] - 1) * (colWidth + margin) + colWidth / 2;
+    object3D.position.y = (rowCount * (rowHeight + margin) - margin) / 2
+      - (slide['row'] - 1) * (rowHeight + margin) - rowHeight / 2; 
+    targets[parentId].table.push(object3D);
+  });
+
+
+  var count = objects.length;
+  var phi, theta;
+
+  // sphere
+  var diameter = Math.round(nearPlaneWidth/Math.PI);
+  var vector = new THREE.Vector3();
+  $.each(arr, function(index, slide) {
+    var object3D = new THREE.Object3D();
+    phi = Math.acos(-1 + ( 2 * index ) / count);
+    theta = Math.sqrt(count * Math.PI) * phi;
+    object3D.position.x = diameter * Math.cos(theta) * Math.sin(phi);
+    object3D.position.y = diameter * Math.sin(theta) * Math.sin(phi);
+    object3D.position.z = diameter * Math.cos(phi);
+
+    vector.copy(object3D.position).multiplyScalar(2);
+    object3D.lookAt(vector);
+
+    targets[parentId].sphere.push(object3D);
+  });
+
 }
 
 function transform(targets, duration) {
@@ -395,4 +467,5 @@ function showNewSlide(index, duration, originalSize) {
     .to({}, duration * 2)
     .onUpdate(render)
     .start();
+
 }
