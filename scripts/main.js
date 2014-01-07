@@ -35,6 +35,7 @@ function init() {
     transform(datasource.id, 1000);
   });
 
+
   // bind event handlers for effect configuration panel
   $('#effect').on('mouseenter', function() {
     if(!$(this).is(':animated')) {
@@ -197,7 +198,7 @@ function generate3DPosition(arr, parentId) {
     jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
     jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
 
-    jSlide.on('dblclick', makeCenterEffect(index, 500, originalSize));
+    jSlide.on('dblclick', readSlide(index, 500, originalSize));
 
     var css3dObject = new THREE.CSS3DObject(jSlide[0]);
     css3dObject.position.x = Math.random() * 4000 - 2000;
@@ -300,7 +301,7 @@ function render() {
   renderer.render(scene, camera);
 }
 
-function makeCenterEffect(index, duration, originalSize) {
+function readSlide(index, duration, originalSize) {
   return function () {
     // pause the controls
     controls.noPan = true;
