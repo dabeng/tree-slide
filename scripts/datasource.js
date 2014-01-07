@@ -1,5 +1,5 @@
 var datasource = {
-  "banner": "JavaScript Web Development","content": "HTML -- content, CSS -- style, Javascript -- behavior",
+  "banner": "JavaScript Web Development","content": "HTML -- content&emsp;CSS -- style&emsp;Javascript -- behavior",
   "children": [
     {"banner" : "HTML", "content": "Hyper Text Markup Language",
       "children": [
