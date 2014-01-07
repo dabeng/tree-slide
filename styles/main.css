@@ -8,6 +8,21 @@ body {
   font-family: consolas;
 }
 
+#firstSlide {
+  width: 800px;
+  height: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -300px 0 0 -400px;
+  padding: 0;
+  text-align: left;
+  background-color: rgba(51,0,51,0.5);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(255,162,255,0.5);
+  cursor: default;
+}
+
 .hidden {
   display: none;
 }
