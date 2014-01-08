@@ -251,40 +251,58 @@ function generate3DPosition(arr, parentId) {
 
 }
 
-/*
- * generate 3D effects based on three.js
-*/
-function generate3DEffects() {
-
-
-}
 
 function focusSlide(direction) {
+  jReadSlides = $('.slide').not('.hidden');
+  jHighlightSlide = $('.highlight');
+  var rowColNum = getRowCol(jReadSlides.length);
+  var total = jReadSlides.length;
+  var targetIndex;
   if($('.highlight').length === 0) {
-    $('.slide').not('.hidden').filter(function(index) {
+    $('.slide').not('.hidden').filter(function() {
       return $(this).prop('data-index') === 0;
     }).addClass('highlight');
   } else {
     switch(direction) {
       case 'left': {
-        var targetIndex = $('.highlight').prop('data-index') - 1;
-        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        targetIndex = jHighlightSlide.prop('data-index') - 1;
+        if(targetIndex >= 0) {
+          jHighlightSlide.removeClass('highlight');
+          jReadSlides.filter(function() {
+            return $(this).prop('data-index') === targetIndex;
+          }).addClass('highlight');
+        }
         break;
       }
-      case 'top': {
-        var targetIndex = $('.highlight').prop('data-index') -1;
-        $('article[data-index='+ targetIndex +']').addClass('highlight');
+      case 'up': {
+        targetIndex = jHighlightSlide.prop('data-index') - rowColNum.col;
+        if(targetIndex >= 0) {
+          jHighlightSlide.removeClass('highlight');
+          jReadSlides.filter(function() {
+            return $(this).prop('data-index') === targetIndex;
+          }).addClass('highlight');
+        }
         break;
       }
       case 'right': {
-        var targetIndex = $('.highlight').prop('data-index') + 1;
-        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        targetIndex = jHighlightSlide.prop('data-index') + 1;
+        if(targetIndex < total) {
+          jHighlightSlide.removeClass('highlight');
+          jReadSlides.filter(function() {
+            return $(this).prop('data-index') === targetIndex;
+          }).addClass('highlight');
+        }
         break;
       }
       case 'down': {
-        var targetIndex = $('.highlight').prop('data-index') -1;
-        $('article[data-index='+ targetIndex +']').addClass('highlight');
-        break;
+        targetIndex = jHighlightSlide.prop('data-index') + rowColNum.col;
+        if(targetIndex < total) {
+          jHighlightSlide.removeClass('highlight');
+          jReadSlides.filter(function() {
+            return $(this).prop('data-index') === targetIndex;
+          }).addClass('highlight');
+          break;
+        }
       }
     }
   }
