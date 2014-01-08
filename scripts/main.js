@@ -267,45 +267,40 @@ function focusSlide(direction) {
       case 'left': {
         targetIndex = jHighlightSlide.prop('data-index') - 1;
         if(targetIndex >= 0) {
-          jHighlightSlide.removeClass('highlight');
-          jReadSlides.filter(function() {
-            return $(this).prop('data-index') === targetIndex;
-          }).addClass('highlight');
+          switchHightlight(targetIndex);
         }
         break;
       }
       case 'up': {
         targetIndex = jHighlightSlide.prop('data-index') - rowColNum.col;
         if(targetIndex >= 0) {
-          jHighlightSlide.removeClass('highlight');
-          jReadSlides.filter(function() {
-            return $(this).prop('data-index') === targetIndex;
-          }).addClass('highlight');
+          switchHightlight(targetIndex);
         }
         break;
       }
       case 'right': {
         targetIndex = jHighlightSlide.prop('data-index') + 1;
         if(targetIndex < total) {
-          jHighlightSlide.removeClass('highlight');
-          jReadSlides.filter(function() {
-            return $(this).prop('data-index') === targetIndex;
-          }).addClass('highlight');
+          switchHightlight(targetIndex);
         }
         break;
       }
       case 'down': {
         targetIndex = jHighlightSlide.prop('data-index') + rowColNum.col;
         if(targetIndex < total) {
-          jHighlightSlide.removeClass('highlight');
-          jReadSlides.filter(function() {
-            return $(this).prop('data-index') === targetIndex;
-          }).addClass('highlight');
-          break;
+          switchHightlight(targetIndex);
         }
+        break;
       }
     }
   }
+}
+ 
+function switchHightlight(targetIndex) {
+  jHighlightSlide.removeClass('highlight');
+  jReadSlides.filter(function() {
+    return $(this).prop('data-index') === targetIndex;
+  }).addClass('highlight');
 }
 
 function transform(id, duration) {
