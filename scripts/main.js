@@ -94,10 +94,16 @@ function init() {
     switch(event.which) {
       case 13: {
         if (jContainer.is('.rootSlide')) {
+          $('#' + datasource.id).addClass('hidden');
           transform(datasource.id, 1000);
           jContainer.prop('className', 'reviewSlide');
         } else if (jContainer.is('.reviewSlide')) {
-          focusSlide('left');
+          if($('.highlight').length === 0) {
+            focusSlide('left');
+          } else {
+            $('.slide').not('.hidden').addClass('hidden');
+            transform($('.highlight').eq(0).prop('id'), 1000);
+          }
         } else if (jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);
         }
@@ -200,8 +206,7 @@ function generate3DPosition(arr, parentId) {
 
   // 3D table
   $.each(arr, function(index, slide) {
-    var jSlide = $('<article>', { 'class': 'slide hidden', 'css':{
-      'id': slide.id,
+    var jSlide = $('<article>', {'id': slide.id, 'class': 'slide hidden', 'css':{
       'width': colWidth,
       'height': rowHeight,
       'backgroundColor': 'rgba(51,0,51,' + (Math.random() * 0.5 + 0.25) + ')'}
@@ -257,7 +262,7 @@ function focusSlide(direction) {
   jHighlightSlide = $('.highlight');
   var rowColNum = getRowCol(jReadSlides.length);
   var total = jReadSlides.length;
-  var targetIndex;
+  // var targetIndex = 0;
   if($('.highlight').length === 0) {
     $('.slide').not('.hidden').filter(function() {
       return $(this).prop('data-index') === 0;
@@ -265,28 +270,28 @@ function focusSlide(direction) {
   } else {
     switch(direction) {
       case 'left': {
-        targetIndex = jHighlightSlide.prop('data-index') - 1;
+        var targetIndex = jHighlightSlide.prop('data-index') - 1;
         if(targetIndex >= 0) {
           switchHightlight(targetIndex);
         }
         break;
       }
       case 'up': {
-        targetIndex = jHighlightSlide.prop('data-index') - rowColNum.col;
+        var targetIndex = jHighlightSlide.prop('data-index') - rowColNum.col;
         if(targetIndex >= 0) {
           switchHightlight(targetIndex);
         }
         break;
       }
       case 'right': {
-        targetIndex = jHighlightSlide.prop('data-index') + 1;
+        var targetIndex = jHighlightSlide.prop('data-index') + 1;
         if(targetIndex < total) {
           switchHightlight(targetIndex);
         }
         break;
       }
       case 'down': {
-        targetIndex = jHighlightSlide.prop('data-index') + rowColNum.col;
+        var targetIndex = jHighlightSlide.prop('data-index') + rowColNum.col;
         if(targetIndex < total) {
           switchHightlight(targetIndex);
         }
@@ -306,7 +311,6 @@ function switchHightlight(targetIndex) {
 function transform(id, duration) {
   TWEEN.removeAll();
   
-  $('#' + id).addClass('hidden');
   var i;
   for (i = 0; i < objects[id].length; i ++) {
     $(objects[id][i].element).removeClass('hidden');
