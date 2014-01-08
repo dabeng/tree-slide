@@ -1,4 +1,4 @@
-var camera, scene, renderer;
+var camera, scene, renderer, container;
 var cameraDist;
 var fov;// field of view
 var pi = Math.PI / 180;
@@ -29,6 +29,7 @@ function init() {
   jFirstSlide.append($('<div>', { 'class': 'number', 'text': 1 }));
   jFirstSlide.append($('<div>', { 'class': 'banner', 'text': datasource.banner }));
   jFirstSlide.append($('<div>', { 'class': 'content'}).html(datasource.content));
+  jContainer.addClass('rootSlide');
 
   // bind event handlers for jumping between the topper hierarchy and the lower hierarchy
   jFirstSlide.on('dblclick',function() {
@@ -91,42 +92,53 @@ function init() {
       animationPlayState = 'animation-play-state';
     }
     switch(event.which) {
+      case 13: {
+        if (jContainer.is('.rootSlide')) {
+          transform(datasource.id, 1000);
+          jContainer.prop('className', 'reviewSlide');
+        } else if (jContainer.is('.reviewSlide')) {
+          focusSlide('left');
+        } else if (jContainer.is('.readSlide')) {
+          turnToNewSlide('previous', originalSize);
+        }
+        break;
+      }
       case 37: {
         $('#triangle-left-effect').css(animationPlayState, 'running');
-        if($('#container').is('.multipleSlide')) {
+        if(jContainer.is('.reviewSlide')) {
           focusSlide('left');
         }
-        else if($('#container').is('.singleSlide')) {
+        else if(jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);
         }
         break;
       }
       case 38: {
         $('#triangle-up-effect').css(animationPlayState, 'running');
-        if($('#container').is('.multipleSlide')) {
+        if(jContainer.is('.reviewSlide')) {
           focusSlide('up');
         }
-        else if($('#container').is('.singleSlide')) {
+        else if(jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);
         }
         break;
       }
       case 39: {
         $('#triangle-right-effect').css(animationPlayState, 'running');
-        if($('#container').is('.multipleSlide')) {
-          focusSlide(right);
+        if(jContainer.is('.reviewSlide')) {
+          focusSlide('right');
         }
-        else if($('#container').is('.singleSlide')) {
+        else if(jContainer.is('.readSlide')) {
           turnToNewSlide('next', originalSize);
         }
         break;
       }
       case 40: {
         $('#triangle-down-effect').css(animationPlayState, 'running');
-        if($('#container').is('.multipleSlide')) {
+        if(jContainer.is('.reviewSlide')) {
           focusSlide('down');
         }
-        else if($('#container').is('.singleSlide')) {
+        else if(jContainer.is('.readSlide')) {
           turnToNewSlide('next', originalSize);
         }
         break;
@@ -152,7 +164,8 @@ function init3DScene() {
   renderer = new THREE.CSS3DRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.domElement.style.position = 'absolute';
-  $('#container').append(renderer.domElement);
+  jContainer = $('#container');
+  jContainer.append(renderer.domElement);
 
   //
   controls = new THREE.TrackballControls(camera, renderer.domElement);
@@ -197,6 +210,7 @@ function generate3DPosition(arr, parentId) {
     jSlide.append($('<div>', { 'class': 'number', 'text': index + 1 }));
     jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
     jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
+    jSlide.prop('data-index', index);
 
     jSlide.on('dblclick', readSlide(index, 500, originalSize));
 
@@ -247,15 +261,31 @@ function generate3DEffects() {
 
 function focusSlide(direction) {
   if($('.highlight').length === 0) {
-    $('.slide').not('.hidden').filter("article['data-index=0']").addClass('highlight');
+    $('.slide').not('.hidden').filter(function(index) {
+      return $(this).prop('data-index') === 0;
+    }).addClass('highlight');
   } else {
     switch(direction) {
       case 'left': {
+        var targetIndex = $('.highlight').prop('data-index') - 1;
+        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        break;
+      }
+      case 'top': {
         var targetIndex = $('.highlight').prop('data-index') -1;
         $('article[data-index='+ targetIndex +']').addClass('highlight');
         break;
       }
-
+      case 'right': {
+        var targetIndex = $('.highlight').prop('data-index') + 1;
+        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        break;
+      }
+      case 'down': {
+        var targetIndex = $('.highlight').prop('data-index') -1;
+        $('article[data-index='+ targetIndex +']').addClass('highlight');
+        break;
+      }
     }
   }
 }
@@ -315,8 +345,8 @@ function readSlide(index, duration, originalSize) {
   	var jOtherSlides = $('.slide').not(object.element);
 
     // set the current view mode to sigleSlide
-    $('#container').removeClass();
-    $('#container').addClass('singleSlide');
+    jContainer.removeClass();
+    jContainer.addClass('readSlide');
     
     // set flag to identify which slide is being read
     jOtherSlides.removeClass('currentSlide');
