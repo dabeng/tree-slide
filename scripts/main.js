@@ -73,12 +73,6 @@ function init() {
   $('#triangle-right-effect').on(animationEndHandler);
   $('#triangle-down-effect').on(animationEndHandler);
 
-  
-
-
-
-
-
 
   //
   $(window).on('resize', onWindowResize);
@@ -103,6 +97,7 @@ function init() {
           } else {
             $('.slide').not('.hidden').addClass('hidden');
             transform($('.highlight').eq(0).prop('id'), 1000);
+            $('.highlight').removeClass('highlight');
           }
         } else if (jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);

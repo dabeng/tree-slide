@@ -75,7 +75,7 @@ var datasource = {
           "children": [
             {"banner": "Mustache", "content": "Mustache is often considered the base for JavaScript templating."},
             {"banner": "Underscore Templates", "content": "It also provides simple templates we can use."},
-            {"banner":"EJS", "content": "EJS is inspired by ERB templates and acts much the same."},
+            {"banner": "EJS", "content": "EJS is inspired by ERB templates and acts much the same."},
             {"banner": "Handlebars", "content": "Handlebars is one of the most popular templating engines and builds on top of Mustache."},
             {"banner": "Jade", "content": "Jade templates are very different in that they depend hugely on indents and whitespace."}
           ]
@@ -97,7 +97,7 @@ var datasource = {
             {"banner": "CU3ER", "content": "CU3ER™ is 3D jQuery Image Slider."},
             {"banner": "Wow Slider", "content": "Awesome slider for noo-coders."},
             {"banner": "Slit Slider", "content": "It help you create a fullscreen slideshow with a twist."},
-            {"banner": "", "content": "Give your pages some headroom. Hide your header until you need it."},
+            {"banner": "Headroom.js", "content": "Give your pages some headroom. Hide your header until you need it."},
             {"banner": "stickUp", "content": "A simple plugin that 'sticks' an element to the top of the browser window while scrolling past it, always keeping it in view."},
             {"banner": "Buttons", "content": "Do more with buttons. Control button states or create groups of buttons for more components like toolbars."},
             {"banner": "LayoutIt!", "content": "Create your frontend code simple and quickly with Bootstrap using our Drag & Drop Interface Builder."},
