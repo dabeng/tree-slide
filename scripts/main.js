@@ -38,7 +38,6 @@ function init() {
     jContainer.prop('className', 'reviewSlide');
   });
 
-
   // bind event handlers for effect configuration panel
   $('#effect').on('mouseenter', function() {
     if(!$(this).is(':animated')) {
@@ -217,6 +216,14 @@ function generate3DPosition(arr, parentId) {
     jSlide.append($('<div>', { 'class': 'content hidden'}).html(slide['content']));
     jSlide.prop('data-index', index);
 
+    jSlide.on('click', function() {
+      if($(this).is('.highlight')) {
+        $(this).toggleClass('highlight'); 
+      } else {
+        $('.highlight').removeClass('highlight');
+        $(this).addClass('highlight');
+      }
+    });
     jSlide.on('dblclick', readSlide(index, 500, originalSize));
 
     var css3dObject = new THREE.CSS3DObject(jSlide[0]);
