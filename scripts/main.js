@@ -33,7 +33,9 @@ function init() {
 
   // bind event handlers for jumping between the topper hierarchy and the lower hierarchy
   jFirstSlide.on('dblclick',function() {
-    transform(datasource.id, 1000);
+    $(this).addClass('hidden');        
+    transform(datasource.id, 500);
+    jContainer.prop('className', 'reviewSlide');
   });
 
 
@@ -212,7 +214,7 @@ function generate3DPosition(arr, parentId) {
 
     jSlide.append($('<div>', { 'class': 'number', 'text': index + 1 }));
     jSlide.append($('<div>', { 'class': 'banner', 'text': slide['banner'] }));
-    jSlide.append($('<div>', { 'class': 'content'}).html(slide['content']));
+    jSlide.append($('<div>', { 'class': 'content hidden'}).html(slide['content']));
     jSlide.prop('data-index', index);
 
     jSlide.on('dblclick', readSlide(index, 500, originalSize));
