@@ -97,6 +97,7 @@ function init() {
           } else {
             var focusedSlideId = $('.highlight')[0].id;
             if(objects[focusedSlideId]) {
+              $('.highlight').removeClass('highlight');
               $('.slide').not('.hidden').addClass('hidden');
               transform(focusedSlideId, 500);
             }
