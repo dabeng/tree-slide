@@ -108,6 +108,19 @@ function init() {
         }
         break;
       }
+      case 27: {
+        if (jContainer.is('.reviewSlide')) {
+            var focusedSlideId = $('.highlight')[0].id;
+            if(objects[focusedSlideId]) {
+              $('.highlight').removeClass('highlight');
+              $('.slide').not('.hidden').addClass('hidden');
+              transform(focusedSlideId, 500);
+            }
+        } else if (jContainer.is('.readSlide')) {
+          turnToNewSlide('previous', originalSize);
+        }
+        break;
+      }
       case 37: {
         $('#triangle-left-effect').css(animationPlayState, 'running');
         if(jContainer.is('.reviewSlide')) {
