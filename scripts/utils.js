@@ -20,8 +20,8 @@ function setRowCol(source) {
   var rowNum = rowColNumbers.row;
   var colNum = rowColNumbers.col;
   for (var i = 0 ; i < count ; i ++) {
-  	source[i]['row'] = Math.ceil((i + 1) / rowNum);
-  	source[i]['col'] = i + 1 - rowNum * (source[i]['row'] - 1);
+  	source[i]['row'] = Math.ceil((i + 1) / colNum);
+  	source[i]['col'] = i + 1 - (source[i]['row']-1) * colNum;
     source[i]['id'] = $('<div>').uniqueId().prop('id');
   }
 }
