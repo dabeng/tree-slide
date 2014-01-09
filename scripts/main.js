@@ -95,14 +95,17 @@ function init() {
       case 13: {
         if (jContainer.is('.rootSlide')) {
           $('#' + datasource.id).addClass('hidden');
-          transform(datasource.id, 1000);
+          transform(datasource.id, 500);
           jContainer.prop('className', 'reviewSlide');
         } else if (jContainer.is('.reviewSlide')) {
           if($('.highlight').length === 0) {
             focusSlide('left');
           } else {
-            $('.slide').not('.hidden').addClass('hidden');
-            transform($('.highlight').eq(0).prop('id'), 1000);
+            var focusedSlideId = $('.highlight')[0].id;
+            if(objects[focusedSlideId]) {
+              $('.slide').not('.hidden').addClass('hidden');
+              transform(focusedSlideId, 500);
+            }
           }
         } else if (jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);
