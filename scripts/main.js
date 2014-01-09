@@ -73,12 +73,6 @@ function init() {
   $('#triangle-right-effect').on(animationEndHandler);
   $('#triangle-down-effect').on(animationEndHandler);
 
-  
-
-
-
-
-
 
   //
   $(window).on('resize', onWindowResize);
