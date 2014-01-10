@@ -299,7 +299,7 @@ function focusSlide(direction) {
   jHighlightSlide = $('.highlight');
   var rowColNum = getRowCol(jReadSlides.length);
   var total = jReadSlides.length;
-  // var targetIndex = 0;
+  var targetIndex;
   if($('.highlight').length === 0) {
     $('.slide').not('.hidden').filter(function() {
       return $(this).prop('data-index') === 0;
@@ -307,28 +307,28 @@ function focusSlide(direction) {
   } else {
     switch(direction) {
       case 'left': {
-        var targetIndex = jHighlightSlide.prop('data-index') - 1;
+        targetIndex = jHighlightSlide.prop('data-index') - 1;
         if(targetIndex >= 0) {
           switchHightlight(targetIndex);
         }
         break;
       }
       case 'up': {
-        var targetIndex = jHighlightSlide.prop('data-index') - rowColNum.col;
+        targetIndex = jHighlightSlide.prop('data-index') - rowColNum.col;
         if(targetIndex >= 0) {
           switchHightlight(targetIndex);
         }
         break;
       }
       case 'right': {
-        var targetIndex = jHighlightSlide.prop('data-index') + 1;
+        targetIndex = jHighlightSlide.prop('data-index') + 1;
         if(targetIndex < total) {
           switchHightlight(targetIndex);
         }
         break;
       }
       case 'down': {
-        var targetIndex = jHighlightSlide.prop('data-index') + rowColNum.col;
+        targetIndex = jHighlightSlide.prop('data-index') + rowColNum.col;
         if(targetIndex < total) {
           switchHightlight(targetIndex);
         }
