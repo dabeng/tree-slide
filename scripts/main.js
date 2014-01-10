@@ -106,7 +106,14 @@ function init() {
             }
           }
         } else if (jContainer.is('.readSlide')) {
-          turnToNewSlide('previous', originalSize);
+          var currentSlideId = $('.currentSlide')[0].id;
+          if(objects[currentSlideId]) {
+            $('.highlight').removeClass('highlight');
+            $('.currentSlide').addClass('hidden');
+            transform(currentSlideId, 500);
+            jContainer.prop('className', 'reviewSlide');
+            restoreInitPosition(findParentNodeId(currentSlideId, objects));
+          }
         }
         break;
       }
@@ -242,9 +249,9 @@ function generate3DPosition(arr, parentId) {
   // initial positions
   $.each(arr, function(index, slide) {
     var object3D = new THREE.Object3D();
-    object3D.position.x = Math.random() * 4000 - 2000;
-    object3D.position.y = Math.random() * 4000 - 2000;
-    object3D.position.z = Math.random() * 4000 - 2000;
+    object3D.position.x = Math.random() * 5000 - 2000;
+    object3D.position.y = Math.random() * 5000 - 2000;
+    object3D.position.z = Math.random() * 5000 - 2000;
     targets[parentId].initial.push(object3D);
   });
 
