@@ -45,3 +45,25 @@ function setRowColOfHierarchialArray(arr) {
     }
   }
 }
+
+function findParentNodeId(id, obj) {
+  for (var prop in obj) {
+    if(obj.hasOwnProperty(prop)) {
+      var count = obj[prop].length;
+      for(var i = 0; i < count; i++) {
+        if(obj[prop][i].element.id === id) {
+          return prop;
+        }
+      }
+    }
+  }
+}
+
+function findGrandpaNodeId(id, obj) {
+  var parentNodeId = findParentNodeId(id, obj);
+  if(parentNodeId === 'ui-id-1') {
+    return "";
+  } else {
+    return findParentNodeId(parentNodeId, obj);
+  }
+}

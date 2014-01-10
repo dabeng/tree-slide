@@ -110,12 +110,14 @@ function init() {
       }
       case 27: {
         if (jContainer.is('.reviewSlide')) {
-            var focusedSlideId = $('.highlight')[0].id;
-            if(objects[focusedSlideId]) {
-              $('.highlight').removeClass('highlight');
-              $('.slide').not('.hidden').addClass('hidden');
-              transform(focusedSlideId, 500);
-            }
+          var grandpaSlideId = findGrandpaNodeId($('.slide').not('.hidden')[0].id, objects);
+          $('.highlight').removeClass('highlight');
+          $('.slide').not('.hidden').addClass('hidden');
+          if(grandpaSlideId === "") {
+            $('#ui-id-1').removeClass('hidden');
+          } else {
+            transform(grandpaSlideId, 500);
+          }
         } else if (jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);
         }
