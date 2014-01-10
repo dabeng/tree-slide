@@ -101,6 +101,7 @@ function init() {
               $('.highlight').removeClass('highlight');
               $('.slide').not('.hidden').addClass('hidden');
               transform(focusedSlideId, 500);
+              restoreInitPosition(findParentNodeId(focusedSlideId, objects));
             }
           }
         } else if (jContainer.is('.readSlide')) {
@@ -110,13 +111,18 @@ function init() {
       }
       case 27: {
         if (jContainer.is('.reviewSlide')) {
-          var grandpaSlideId = findGrandpaNodeId($('.slide').not('.hidden')[0].id, objects);
+          // id of any available slides
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+          var grandpaSlideId = findGrandpaNodeId(randomSlideId, objects);
           $('.highlight').removeClass('highlight');
           $('.slide').not('.hidden').addClass('hidden');
           if(grandpaSlideId === "") {
             $('#ui-id-1').removeClass('hidden');
+            jContainer.prop('className', 'rootSlide');
+            restoreInitPosition('ui-id-1');
           } else {
             transform(grandpaSlideId, 500);
+            restoreInitPosition(findParentNodeId(randomSlideId, objects));
           }
         } else if (jContainer.is('.readSlide')) {
           turnToNewSlide('previous', originalSize);
@@ -209,7 +215,7 @@ function loopGenerate3DPosition(arr, id) {
 
 function generate3DPosition(arr, parentId) {
   objects[parentId] = [];
-  targets[parentId] = {"table": [], "sphere": []};
+  targets[parentId] = {"initial": [], "table": [], "sphere": []};
 
   var rowColNum = getRowCol(arr.length);
   var rowCount = rowColNum.row;
@@ -217,6 +223,15 @@ function generate3DPosition(arr, parentId) {
   var colCount = rowColNum.col;
   var colWidth = Math.round((nearPlaneWidth - (colCount - 1) * margin) / colCount);
   var originalSize = {'width': colWidth, 'height': rowHeight};
+
+  // initial positions
+  $.each(arr, function(index, slide) {
+    var object3D = new THREE.Object3D();
+    object3D.position.x = Math.random() * 4000 - 2000;
+    object3D.position.y = Math.random() * 4000 - 2000;
+    object3D.position.z = Math.random() * 4000 - 2000;
+    targets[parentId].initial.push(object3D);
+  });
 
   // 3D table
   $.each(arr, function(index, slide) {
@@ -350,6 +365,14 @@ function transform(id, duration) {
 
   new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
 
+}
+
+function restoreInitPosition(id) {
+  $.each(objects[id], function(index, slide) {
+    slide.position.x = targets[id].initial[index].position.x;
+    slide.position.y = targets[id].initial[index].position.y;
+    slide.position.z = targets[id].initial[index].position.z;
+  });
 }
 
 function onWindowResize() {
