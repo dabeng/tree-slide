@@ -88,7 +88,7 @@ function init() {
     }
 
     switch(event.which) {
-      case 13: {
+      case 13: {// enter key
         if (jContainer.is('.rootSlide')) {
           $('#' + datasource.id).addClass('hidden');
           transform(datasource.id, 500);
@@ -108,8 +108,10 @@ function init() {
         } else if (jContainer.is('.readSlide')) {
           var currentSlideId = $('.currentSlide')[0].id;
           if(objects[currentSlideId]) {
+            var parentSlideId = findParentNodeId(currentSlideId, objects);
             $('.highlight').removeClass('highlight');
-            $('.currentSlide').addClass('hidden');
+            $('.currentSlide').addClass('hidden')
+              .css({"width": targets[parentSlideId].size.width, "height": targets[parentSlideId].size.height});
             transform(currentSlideId, 500);
             jContainer.prop('className', 'reviewSlide');
             restoreInitPosition(findParentNodeId(currentSlideId, objects));
@@ -117,7 +119,7 @@ function init() {
         }
         break;
       }
-      case 27: {
+      case 27: {// esc key
         if (jContainer.is('.reviewSlide')) {
           // id of any available slides
           var randomSlideId = $('.slide').not('.hidden')[0].id;
@@ -142,7 +144,7 @@ function init() {
         }
         break;
       }
-      case 37: {
+      case 37: {// left key
         $('#triangle-left-effect').css(animationPlayState, 'running');
         if(jContainer.is('.reviewSlide')) {
           focusSlide('left');
@@ -154,7 +156,7 @@ function init() {
         }
         break;
       }
-      case 38: {
+      case 38: {// up key
         $('#triangle-up-effect').css(animationPlayState, 'running');
         if(jContainer.is('.reviewSlide')) {
           focusSlide('up');
@@ -166,7 +168,7 @@ function init() {
         }
         break;
       }
-      case 39: {
+      case 39: {// right key
         $('#triangle-right-effect').css(animationPlayState, 'running');
         if(jContainer.is('.reviewSlide')) {
           focusSlide('right');
@@ -178,7 +180,7 @@ function init() {
         }
         break;
       }
-      case 40: {
+      case 40: {// down key
         $('#triangle-down-effect').css(animationPlayState, 'running');
         if(jContainer.is('.reviewSlide')) {
           focusSlide('down');
