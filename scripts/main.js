@@ -126,7 +126,12 @@ function init() {
             restoreInitPosition(findParentNodeId(randomSlideId, objects));
           }
         } else if (jContainer.is('.readSlide')) {
-          turnToNewSlide('previous', originalSize);
+          var currentSlideId = $('.currentSlide')[0].id;
+          var dataIndex = $('.currentSlide').prop('data-index');
+          var parentSlideId = findParentNodeId(currentSlideId, objects);
+
+          transform(parentSlideId, 500, dataIndex);
+          jContainer.prop('className', 'reviewSlide');
         }
         break;
       }
@@ -355,26 +360,49 @@ function switchHightlight(targetIndex) {
   }).addClass('highlight');
 }
 
-function transform(id, duration) {
+function transform(id, duration, dataIndex) {
   TWEEN.removeAll();
   
-  var i;
-  for (i = 0; i < objects[id].length; i ++) {
-    $(objects[id][i].element).removeClass('hidden');
-    var object = objects[id][i];
-	  var target = targets[id].table[i];
-
-	  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
-	    z: target.position.z}, Math.random() * duration + duration)
-	    .easing(TWEEN.Easing.Exponential.InOut).start();
-
-	  new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
-	    z: target.rotation.z}, Math.random() * duration + duration)
-	    .easing(TWEEN.Easing.Exponential.InOut).start();
+  if(dataIndex >= 0) {
+    var object = objects[id][dataIndex];
+    var target = targets[id].table[dataIndex];
+    new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
+      z: target.position.z}, Math.random() * duration + duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .start();
+    new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
+      z: target.rotation.z}, Math.random() * duration + duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .start();
+    new TWEEN.Tween({'width': 800, 'height': 600})
+      .to({'width': targets[id].size.width, 'height': targets[id].size.height}, duration)
+      .easing(TWEEN.Easing.Quintic.In)
+      .onUpdate(function() {
+        $(object.element).css({'width': this.width, 'height': this.height});
+      })
+      .onComplete(function() {
+        $.each(objects[id],function(index, slide) {
+          $(slide.element).removeClass('hidden');
+        });
+      })
+      .start();
+  } else {
+    for (var i = 0; i < objects[id].length; i ++) {
+      $(objects[id][i].element).removeClass('hidden');
+      var object = objects[id][i];
+	    var target = targets[id].table[i];
+  
+	    new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
+	      z: target.position.z}, Math.random() * duration + duration)
+	      .easing(TWEEN.Easing.Exponential.InOut).start();
+  
+	    new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
+	      z: target.rotation.z}, Math.random() * duration + duration)
+	      .easing(TWEEN.Easing.Exponential.InOut).start();
+    }
   }
 
   new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
-
 }
 
 function restoreInitPosition(id) {
