@@ -86,6 +86,7 @@ function init() {
     } else {
       animationPlayState = 'animation-play-state';
     }
+
     switch(event.which) {
       case 13: {
         if (jContainer.is('.rootSlide')) {
@@ -135,6 +136,8 @@ function init() {
           focusSlide('left');
         }
         else if(jContainer.is('.readSlide')) {
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+          var originalSize = targets[findParentNodeId(randomSlideId, objects)].size;
           turnToNewSlide('previous', originalSize);
         }
         break;
@@ -145,6 +148,8 @@ function init() {
           focusSlide('up');
         }
         else if(jContainer.is('.readSlide')) {
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+          var originalSize = targets[findParentNodeId(randomSlideId, objects)].size;
           turnToNewSlide('previous', originalSize);
         }
         break;
@@ -155,6 +160,8 @@ function init() {
           focusSlide('right');
         }
         else if(jContainer.is('.readSlide')) {
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+          var originalSize = targets[findParentNodeId(randomSlideId, objects)].size;
           turnToNewSlide('next', originalSize);
         }
         break;
@@ -165,6 +172,8 @@ function init() {
           focusSlide('down');
         }
         else if(jContainer.is('.readSlide')) {
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+          var originalSize = targets[findParentNodeId(randomSlideId, objects)].size;
           turnToNewSlide('next', originalSize);
         }
         break;
@@ -215,7 +224,7 @@ function loopGenerate3DPosition(arr, id) {
 
 function generate3DPosition(arr, parentId) {
   objects[parentId] = [];
-  targets[parentId] = {"initial": [], "table": [], "sphere": []};
+  targets[parentId] = {"size": {},"initial": [], "table": [], "sphere": []};
 
   var rowColNum = getRowCol(arr.length);
   var rowCount = rowColNum.row;
@@ -223,6 +232,7 @@ function generate3DPosition(arr, parentId) {
   var colCount = rowColNum.col;
   var colWidth = Math.round((nearPlaneWidth - (colCount - 1) * margin) / colCount);
   var originalSize = {'width': colWidth, 'height': rowHeight};
+  targets[parentId].size = originalSize;
 
   // initial positions
   $.each(arr, function(index, slide) {
@@ -395,55 +405,58 @@ function render() {
 
 function readSlide(index, duration, originalSize) {
   return function () {
-    // pause the controls
-    controls.noPan = true;
-    controls.noRoll = true;
-    controls.noRotate = true;
-    controls.noZoom = true;
+    if(!jContainer.is('.readSlide')) {
+      // pause the controls
+      controls.noPan = true;
+      controls.noRoll = true;
+      controls.noRotate = true;
+      controls.noZoom = true;
 
-    var object = objects[index];
-    var target = targets.table[index];
-  	var jSelectedSlide = $(object.element);
-  	var jOtherSlides = $('.slide').not(object.element);
+      var randomSlideId = $('.slide').not('.hidden')[0].id;
+      var parentSlideId = findParentNodeId(randomSlideId, objects);
+      var object = objects[parentSlideId][index];
+      var target = targets[parentSlideId].table[index];
+  	  var jSelectedSlide = $(object.element);
+  	  var jOtherSlides = $('.slide').not(object.element);
 
-    // set the current view mode to sigleSlide
-    jContainer.removeClass();
-    jContainer.addClass('readSlide');
+      // set the current view mode to sigleSlide
+      jContainer.prop('className', 'readSlide');
     
-    // set flag to identify which slide is being read
-    jOtherSlides.removeClass('currentSlide');
-    jSelectedSlide.addClass('currentSlide');
+      // set flag to identify which slide is being read
+      jOtherSlides.removeClass('currentSlide');
+      jSelectedSlide.addClass('currentSlide');
 
-    // create the data-index property of slide of jquery object
-    $('.currentSlide').prop('data-index', index);
+      // create the data-index property of slide of jquery object
+      $('.currentSlide').prop('data-index', index);
 
-    // hide other slides
-    jOtherSlides.addClass('hidden');
+      // hide other slides
+      jOtherSlides.addClass('hidden');
 
-  	// turn to the screen
-  	controls.reset();
+  	  // turn to the screen
+  	  controls.reset();
 
-    // fit into render area by HEIGHT
-    new TWEEN.Tween(object.position)
-      .to({x: 0, y: 0, z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, duration)
-      .easing(TWEEN.Easing.Exponential.InOut)
-      .start();
-    new TWEEN.Tween({'width': originalSize.width, 'height': originalSize.height})
-      .to({'width': 800, 'height': 600}, duration)
-      .easing(TWEEN.Easing.Exponential.InOut)
-      .onUpdate(function() {
+      // fit into render area by HEIGHT
+      new TWEEN.Tween(object.position)
+        .to({x: 0, y: 0, z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start();
+      new TWEEN.Tween({'width': originalSize.width, 'height': originalSize.height})
+        .to({'width': 800, 'height': 600}, duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .onUpdate(function() {
           $(object.element).css({'width': this.width, 'height': this.height});
       })
       .start();
-    new TWEEN.Tween(object.rotation)
-      .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
-      .easing(TWEEN.Easing.Exponential.InOut)
-      .start();
-    new TWEEN.Tween(window)
-      .to({}, duration * 2)
-      .onUpdate(render)
-      .start();
+      new TWEEN.Tween(object.rotation)
+        .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start();
+      new TWEEN.Tween(window)
+        .to({}, duration * 2)
+        .onUpdate(render)
+        .start();
   };
+  }
 }
 
 // turn to new slide according to the current slide
@@ -473,8 +486,10 @@ function turnToNewSlide(type, originalSize) {
 
 
 function hideCurrentSlide(index, duration, originalSize) {
-  var object = objects[index];
-  var target = targets.table[index];
+  var randomSlideId = $('.slide').not('.hidden')[0].id;
+  var parentSlideId = findParentNodeId(randomSlideId, objects);
+  var object = objects[parentSlideId][index];
+  var target = targets[parentSlideId].table[index];
   var jSelectedSlide = $(object.element);
   var jOtherSlides = $('.slide').not(object.element);
 
@@ -506,8 +521,10 @@ function hideCurrentSlide(index, duration, originalSize) {
 }
 
 function showNewSlide(index, duration, originalSize) {
-  var object = objects[index];
-  var target = targets.table[index];
+  var randomSlideId = $('.slide').not('.hidden')[0].id;
+  var parentSlideId = findParentNodeId(randomSlideId, objects);
+  var object = objects[parentSlideId][index];
+  var target = targets[parentSlideId].table[index];
   var jSelectedSlide = $(object.element);
   var jOtherSlides = $('.slide').not(object.element);
     
