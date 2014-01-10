@@ -492,16 +492,18 @@ function readSlide(index, duration, originalSize) {
         .to({}, duration * 2)
         .onUpdate(render)
         .start();
+    }
   };
-  }
 }
 
 // turn to new slide according to the current slide
 function turnToNewSlide(type, originalSize) {
   var index = $('.currentSlide').prop('data-index');
+  var currentSlideId = $('.currentSlide')[0].id;
+  var parentSlideId = findParentNodeId(currentSlideId, objects);
   // determine whether it can be turned to the new slide
   if(type === 'next') {
-    if(index >= objects.length - 1) {
+    if(index >= objects[parentSlideId].length - 1) {
       return;
     }
   } else {
