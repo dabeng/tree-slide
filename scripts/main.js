@@ -540,7 +540,14 @@ function hideCurrentSlide(index, duration, originalSize) {
   var randomSlideId = $('.slide').not('.hidden')[0].id;
   var parentSlideId = findParentNodeId(randomSlideId, objects);
   var object = objects[parentSlideId][index];
-  var target = targets[parentSlideId].table[index];
+  var multipleEffect = $('input[name="multiple-slides-effects"]:checked').val();
+  var checkedTargets;
+  if(multipleEffect === '3dtable') {
+    checkedTargets = targets[parentSlideId].table;
+  } else if (multipleEffect === 'sphere') {
+    checkedTargets = targets[parentSlideId].sphere;
+  }
+  var target = checkedTargets[index];
   var jSelectedSlide = $(object.element);
   var jOtherSlides = $('.slide').not(object.element);
 
@@ -564,7 +571,7 @@ function hideCurrentSlide(index, duration, originalSize) {
     .start();
 
   new TWEEN.Tween(object.rotation)
-    .to({x: 0, y: 0, z: 0}, duration)
+    .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .start();
 
@@ -591,7 +598,7 @@ function showNewSlide(index, duration, originalSize) {
     .to({x: 0, y: 0, z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .onStart(function() {
-        jSelectedSlide.removeClass('hidden');
+      jSelectedSlide.removeClass('hidden');
     })
     .start();
 
@@ -599,12 +606,12 @@ function showNewSlide(index, duration, originalSize) {
     .to({'width': 800, 'height': 600}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .onUpdate(function() {
-        $(object.element).css({'width': this.width, 'height': this.height});
+      $(object.element).css({'width': this.width, 'height': this.height});
     })
     .start();
 
   new TWEEN.Tween(object.rotation)
-    .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
+    .to({x: 0, y: 0, z: 0}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .start();
 
