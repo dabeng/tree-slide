@@ -73,10 +73,12 @@ function init() {
     }
   });
   $("input[name='multiple-slides-effects']").on('change',function() {
-    // alert('OK');
-          var randomSlideId = $('.slide').not('.hidden')[0].id;
-      var parentSlideId = findParentNodeId(randomSlideId, objects);
-      transform(parentSlideId, 1000 );
+    var randomSlideId = $('.slide').not('.hidden')[0].id;
+    var parentSlideId = findParentNodeId(randomSlideId, objects);
+    transform(parentSlideId, 1000 );
+  });
+  $("input[name='multiple-slides-effects']").on('click',function() {
+    $(this).blur();
   });
 
   
