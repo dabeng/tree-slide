@@ -73,9 +73,11 @@ function init() {
     }
   });
   $("input[name='multiple-slides-effects']").on('change',function() {
-    var randomSlideId = $('.slide').not('.hidden')[0].id;
-    var parentSlideId = findParentNodeId(randomSlideId, objects);
-    transform(parentSlideId, 1000 );
+    if (jContainer.is('.reviewSlide')) {
+      var randomSlideId = $('.slide').not('.hidden')[0].id;
+      var parentSlideId = findParentNodeId(randomSlideId, objects);
+      transform(parentSlideId, 1000 );
+    }
   });
   $("input[name='multiple-slides-effects']").on('click',function() {
     $(this).blur();
@@ -463,7 +465,6 @@ function readSlide(index, duration, originalSize) {
       var randomSlideId = $('.slide').not('.hidden')[0].id;
       var parentSlideId = findParentNodeId(randomSlideId, objects);
       var object = objects[parentSlideId][index];
-      var target = targets[parentSlideId].table[index];
   	  var jSelectedSlide = $(object.element);
   	  var jOtherSlides = $('.slide').not(object.element);
 
@@ -496,7 +497,7 @@ function readSlide(index, duration, originalSize) {
       })
       .start();
       new TWEEN.Tween(object.rotation)
-        .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
+        .to({x: 0, y: 0, z: 0}, duration)
         .easing(TWEEN.Easing.Exponential.InOut)
         .start();
       new TWEEN.Tween(window)
