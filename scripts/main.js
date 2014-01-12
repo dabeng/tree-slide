@@ -19,7 +19,30 @@ $(function($){
 
 function init() {
   // init global varibles used in 3D transforms, and then generate 3d positions for all sldes except for first slide
-  init3DScene();
+  fov = 40;
+  aspect = window.innerWidth / window.innerHeight;
+  cameraDist = 3000;
+  camera = new THREE.PerspectiveCamera(fov, aspect, 0, 10000);
+  camera.position.z = cameraDist;
+  scene = new THREE.Scene();
+  nearPlaneHeight = cameraDist * Math.tan(fov / 2 * pi) * 2;
+  nearPlaneWidth = nearPlaneHeight * (4 / 3);
+  margin = 20;
+
+  //
+  renderer = new THREE.CSS3DRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.domElement.style.position = 'absolute';
+  jContainer = $('#container');
+  jContainer.append(renderer.domElement);
+
+  //
+  controls = new THREE.TrackballControls(camera, renderer.domElement);
+  controls.rotateSpeed = 0.5;
+  controls.minDistance = 500;
+  controls.maxDistance = 6000;
+  controls.addEventListener('change', render);
+
   datasource['id'] = $('<div>').uniqueId().prop('id');
   $.when(setRowColOfHierarchialArray(datasource.children))
     .done(loopGenerate3DPosition(datasource.children, datasource.id));
@@ -49,8 +72,13 @@ function init() {
       $(this).animate({'right': '-190px'}, 'slow');
     }
   });
-  $('#effect-3dtable').on('click', function (event) { transform(targets.table, 1000 ); });
-  $('#effect-sphere').on('click', function (event) { transform(targets.sphere, 1000 ); });
+  $("input[name='multiple-slides-effects']").on('change',function() {
+    // alert('OK');
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+      var parentSlideId = findParentNodeId(randomSlideId, objects);
+      transform(parentSlideId, 1000 );
+  });
+
   
   // bind event handlers for the catalogue panel of slides
   $('#catalogue').on('mouseenter', function() {
@@ -196,32 +224,6 @@ function init() {
   });
 
 
-}
-
-function init3DScene() {
-  fov = 40;
-  aspect = window.innerWidth / window.innerHeight;
-  cameraDist = 3000;
-  camera = new THREE.PerspectiveCamera(fov, aspect, 0, 10000);
-  camera.position.z = cameraDist;
-  scene = new THREE.Scene();
-  nearPlaneHeight = cameraDist * Math.tan(fov / 2 * pi) * 2;
-  nearPlaneWidth = nearPlaneHeight * (4 / 3);
-  margin = 20;
-
-  //
-  renderer = new THREE.CSS3DRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.domElement.style.position = 'absolute';
-  jContainer = $('#container');
-  jContainer.append(renderer.domElement);
-
-  //
-  controls = new THREE.TrackballControls(camera, renderer.domElement);
-  controls.rotateSpeed = 0.5;
-  controls.minDistance = 500;
-  controls.maxDistance = 6000;
-  controls.addEventListener('change', render);
 }
 
 function loopGenerate3DPosition(arr, id) {
@@ -396,10 +398,17 @@ function transform(id, duration, dataIndex) {
       })
       .start();
   } else {
+    var multipleEffect = $('input[name="multiple-slides-effects"]:checked').val();
+    var checkedTargets;
+    if(multipleEffect === '3dtable') {
+      checkedTargets = targets[id].table;
+    } else if (multipleEffect === 'sphere') {
+      checkedTargets = targets[id].sphere;
+    }
     for (var i = 0; i < objects[id].length; i ++) {
       $(objects[id][i].element).removeClass('hidden');
       var object = objects[id][i];
-	    var target = targets[id].table[i];
+	    var target = checkedTargets[i];
   
 	    new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
 	      z: target.position.z}, Math.random() * duration + duration)
