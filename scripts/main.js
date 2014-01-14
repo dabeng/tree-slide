@@ -230,7 +230,9 @@ function init() {
  
   // bind event handler for restore init status button
   $('#square-init').on('click', function() {
-    controls.reset();
+    if (jContainer.is('.reviewSlide')) {
+      controls.reset();
+    }
   });
 
 }
