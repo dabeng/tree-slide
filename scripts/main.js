@@ -378,9 +378,16 @@ function switchHightlight(targetIndex) {
 function transform(id, duration, dataIndex) {
   TWEEN.removeAll();
   
+  var multipleEffect = $('input[name="multiple-slides-effects"]:checked').val();
+  var checkedTargets;
+  if(multipleEffect === '3dtable') {
+    checkedTargets = targets[id].table;
+  } else if (multipleEffect === 'sphere') {
+    checkedTargets = targets[id].sphere;
+  }
   if(dataIndex >= 0) {
     var object = objects[id][dataIndex];
-    var target = targets[id].table[dataIndex];
+    var target = checkedTargets[dataIndex];
     new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
       z: target.position.z}, Math.random() * duration + duration)
       .easing(TWEEN.Easing.Exponential.InOut)
@@ -402,13 +409,6 @@ function transform(id, duration, dataIndex) {
       })
       .start();
   } else {
-    var multipleEffect = $('input[name="multiple-slides-effects"]:checked').val();
-    var checkedTargets;
-    if(multipleEffect === '3dtable') {
-      checkedTargets = targets[id].table;
-    } else if (multipleEffect === 'sphere') {
-      checkedTargets = targets[id].sphere;
-    }
     for (var i = 0; i < objects[id].length; i ++) {
       $(objects[id][i].element).removeClass('hidden');
       var object = objects[id][i];
