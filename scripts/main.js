@@ -387,9 +387,12 @@ function transform(id, duration, dataIndex) {
   }
 
   for (var i = 0; i < objects[id].length; i ++) {
-    $(objects[id][i].element).removeClass('hidden');
     var object = objects[id][i];
 	  var target = checkedTargets[i];
+
+    if (!!!dataIndex) {
+      $(objects[id][i].element).removeClass('hidden');
+    }
 
 	  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
 	    z: target.position.z}, Math.random() * duration + duration)
@@ -400,7 +403,7 @@ function transform(id, duration, dataIndex) {
 	    z: target.rotation.z}, Math.random() * duration + duration)
 	    .easing(TWEEN.Easing.Exponential.InOut)
       .start();
-    if(dataIndex >= 0 && i === dataIndex) {
+    if (dataIndex >= 0 && i === dataIndex) {
       new TWEEN.Tween({'width': 800, 'height': 600})
         .to({'width': targets[id].size.width, 'height': targets[id].size.height}, duration)
         .easing(TWEEN.Easing.Quintic.In)
@@ -466,6 +469,9 @@ function readSlide(index, duration, originalSize) {
       // set flag to identify which slide is being read
       jOtherSlides.removeClass('currentSlide');
       jSelectedSlide.addClass('currentSlide');
+
+      // display the content of the slide
+      jSelectedSlide.find('.content').removeClass('hidden');
 
       // create the data-index property of slide of jquery object
       $('.currentSlide').prop('data-index', index);
