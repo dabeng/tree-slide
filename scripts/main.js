@@ -173,6 +173,7 @@ function init() {
 
           transform(parentSlideId, 500, dataIndex);
           jContainer.prop('className', 'reviewSlide');
+          toggleControlsActive();
         }
         break;
       }
@@ -456,10 +457,7 @@ function readSlide(index, duration, originalSize) {
   return function () {
     if(!jContainer.is('.readSlide')) {
       // pause the controls
-      controls.noPan = true;
-      controls.noRoll = true;
-      controls.noRotate = true;
-      controls.noZoom = true;
+      toggleControlsActive();
 
       var randomSlideId = $('.slide').not('.hidden')[0].id;
       var parentSlideId = findParentNodeId(randomSlideId, objects);
@@ -624,4 +622,11 @@ function showNewSlide(index, duration, originalSize) {
     .onUpdate(render)
     .start();
 
+}
+
+function toggleControlsActive() {
+  controls.noPan = !controls.noPan ;
+  controls.noRoll = !controls.noRoll;
+  controls.noRotate = !controls.noRotate;
+  controls.noZoom = !controls.noZoom;
 }
