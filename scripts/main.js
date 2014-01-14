@@ -642,10 +642,16 @@ function initCatalogue(slides) {
 
   $.when(loopGenerateCatalogueNode(catalogueDatasource, slides.children, slides.id))
     .done(function() {
-      $('#catalogue-content').jstree({ 'core' : {
+      $('#catalogue-content').on('after_open.jstree', function (e, data) {
+        $('#catalogue-content').data('jsp').reinitialise();
+      })
+      .jstree({ 'core' : {
         'data' : catalogueDatasource
       } });
+
+      $('#catalogue-content').jScrollPane();
     });
+
 }
 
 function loopGenerateCatalogueNode(datasource, arr, id) {

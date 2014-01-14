@@ -363,6 +363,11 @@ body {
 }
 
 #catalogue-content {
+  width: 100%;
+  position: absolute;
+  top: 25px;
+  bottom: 0px;
+  overflow: hidden;
   color: white;
 }
 

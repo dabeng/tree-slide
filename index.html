@@ -5,11 +5,14 @@
   	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
   	<title>Tree Slide</title>
     <link rel="stylesheet" type="text/css" href="styles/jsTree/style.css" />
+    <link rel="stylesheet" type="text/css" href="styles/jquery.jscrollpane.css" />
   	<link rel="stylesheet" type="text/css" href="styles/main.css">
   	<script type="text/javascript" src="scripts/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="scripts/jquery-ui-1.10.3.custom.min.js"></script>
     <script type="text/javascript" src="scripts/jquery.mb.browser.min.js"></script>
     <script type="text/javascript" src="scripts/jstree.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="scripts/jquery.jscrollpane.min.js"></script>
     <script type="text/javascript" src="scripts/three.min.js"></script>
   	<script type="text/javascript" src="scripts/tween.min.js"></script>
   	<script type="text/javascript" src="scripts/TrackballControls.js"></script>
@@ -35,7 +38,7 @@
     <article class="slide firstSlide"></article>
     <aside id="catalogue" class="sidebar">
       <header id="catalogue-header">Table of Contents</header>
-      <div id="catalogue-content"><div>
+      <div id="catalogue-content" class="scroll-pane"><div>
     </aside>
     <aside id="effect" class="sidebar">
       <header id="effect-header">Effects Configuration</header>
