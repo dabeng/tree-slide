@@ -385,42 +385,34 @@ function transform(id, duration, dataIndex) {
   } else if (multipleEffect === 'sphere') {
     checkedTargets = targets[id].sphere;
   }
-  if(dataIndex >= 0) {
-    var object = objects[id][dataIndex];
-    var target = checkedTargets[dataIndex];
-    new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
-      z: target.position.z}, Math.random() * duration + duration)
-      .easing(TWEEN.Easing.Exponential.InOut)
+
+  for (var i = 0; i < objects[id].length; i ++) {
+    $(objects[id][i].element).removeClass('hidden');
+    var object = objects[id][i];
+	  var target = checkedTargets[i];
+
+	  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
+	    z: target.position.z}, Math.random() * duration + duration)
+	    .easing(TWEEN.Easing.Exponential.InOut)
       .start();
-    new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
-      z: target.rotation.z}, Math.random() * duration + duration)
-      .easing(TWEEN.Easing.Exponential.InOut)
+
+	  new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
+	    z: target.rotation.z}, Math.random() * duration + duration)
+	    .easing(TWEEN.Easing.Exponential.InOut)
       .start();
-    new TWEEN.Tween({'width': 800, 'height': 600})
-      .to({'width': targets[id].size.width, 'height': targets[id].size.height}, duration)
-      .easing(TWEEN.Easing.Quintic.In)
-      .onUpdate(function() {
-        $(object.element).css({'width': this.width, 'height': this.height});
-      })
-      .onComplete(function() {
-        $.each(objects[id],function(index, slide) {
-          $(slide.element).removeClass('hidden');
-        });
-      })
-      .start();
-  } else {
-    for (var i = 0; i < objects[id].length; i ++) {
-      $(objects[id][i].element).removeClass('hidden');
-      var object = objects[id][i];
-	    var target = checkedTargets[i];
-  
-	    new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
-	      z: target.position.z}, Math.random() * duration + duration)
-	      .easing(TWEEN.Easing.Exponential.InOut).start();
-  
-	    new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
-	      z: target.rotation.z}, Math.random() * duration + duration)
-	      .easing(TWEEN.Easing.Exponential.InOut).start();
+    if(dataIndex >= 0 && i === dataIndex) {
+      new TWEEN.Tween({'width': 800, 'height': 600})
+        .to({'width': targets[id].size.width, 'height': targets[id].size.height}, duration)
+        .easing(TWEEN.Easing.Quintic.In)
+        .onUpdate(function() {
+          $(objects[id][dataIndex].element).css({'width': this.width, 'height': this.height});
+        })
+        .onComplete(function() {
+          $.each(objects[id],function(index, slide) {
+            $(slide.element).removeClass('hidden');
+          });
+        })
+        .start();
     }
   }
 
