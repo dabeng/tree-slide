@@ -45,7 +45,7 @@ function init() {
 
   datasource['id'] = $('<div>').uniqueId().prop('id');
   $.when(setRowColOfHierarchialArray(datasource.children))
-    .done(loopGenerate3DPosition(datasource.children, datasource.id));
+    .done(loopGenerate3DPosition(datasource.children, datasource.id), initCatalogue(datasource));
 
   jFirstSlide = $('.firstSlide');
   jFirstSlide.prop('id', datasource['id']);
@@ -633,4 +633,40 @@ function toggleControlsActive() {
   controls.noRoll = !controls.noRoll;
   controls.noRotate = !controls.noRotate;
   controls.noZoom = !controls.noZoom;
+}
+
+function initCatalogue(slides) {
+  // first, build the datasoucre for the catalogue
+  var catalogueDatasource = [];
+  catalogueDatasource.push({"id" : slides.id.replace(/ui/, 'cn'), "parent" : "#", "text" : slides.banner});
+
+  $.when(loopGenerateCatalogueNode(catalogueDatasource, slides.children, slides.id))
+    .done(function() {
+      $('#catalogue-content').jstree({ 'core' : {
+        'data' : catalogueDatasource
+      } });
+    });
+}
+
+function loopGenerateCatalogueNode(datasource, arr, id) {
+  CatalogueNode(datasource, arr, id);
+  var count = arr.length;
+  for(var i = 0;i < count; i++) {
+    var children = arr[i].children;
+    var parentId = arr[i].id;
+    if (children) {
+      loopGenerateCatalogueNode(datasource, children, parentId);
+    }
+  }
+}
+
+function CatalogueNode(datasource, arr, parentId) {
+  var count = arr.length;
+  for(var i = 0;i < count; i++) {
+    datasource.push({ 
+      "id" : arr[i].id.replace(/ui/, 'cn'),
+      "parent" : parentId.replace(/ui/, 'cn'),
+      "text" : arr[i].banner
+    });
+  }
 }

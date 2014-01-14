@@ -362,6 +362,10 @@ body {
   text-align: center;
 }
 
+#catalogue-content {
+  color: white;
+}
+
 /* configuration panel for the slides */
 #effect {
   position: absolute;
