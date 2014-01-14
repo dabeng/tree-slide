@@ -366,6 +366,15 @@ body {
   color: white;
 }
 
+.jstree-default .jstree-hovered {
+  background-color: white;
+  color: black;
+}
+.jstree-default .jstree-clicked {
+  background-color: white;
+  color: black;
+}
+
 /* configuration panel for the slides */
 #effect {
   position: absolute;
