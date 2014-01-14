@@ -390,8 +390,11 @@ function transform(id, duration, dataIndex) {
     var object = objects[id][i];
 	  var target = checkedTargets[i];
 
+    // if user is reviewing multiple slides
     if (!!!dataIndex) {
-      $(objects[id][i].element).removeClass('hidden');
+      $(object.element).removeClass('hidden');
+    } else {
+      // $(object.element).find('.content').addClass('hidden');
     }
 
 	  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
@@ -414,6 +417,7 @@ function transform(id, duration, dataIndex) {
           $.each(objects[id],function(index, slide) {
             $(slide.element).removeClass('hidden');
           });
+          $(objects[id][dataIndex].element).find('.content').addClass('hidden');
         })
         .start();
     }
@@ -553,10 +557,11 @@ function hideCurrentSlide(index, duration, originalSize) {
     .to({x: target.position.x, y: target.position.y, z: target.position.z}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .onStart(function() {
-        jSelectedSlide.removeClass('hidden');
+      jSelectedSlide.removeClass('hidden');
     })
     .onComplete(function() {
-        jSelectedSlide.addClass('hidden');
+      jSelectedSlide.addClass('hidden');
+      jSelectedSlide.find('.content').addClass('hidden');
     })
     .start();
 
@@ -564,7 +569,7 @@ function hideCurrentSlide(index, duration, originalSize) {
     .to({'width': originalSize.width, 'height': originalSize.height}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .onUpdate(function() {
-        $(object.element).css({'width': this.width, 'height': this.height});
+      $(object.element).css({'width': this.width, 'height': this.height});
     })
     .start();
 
@@ -597,6 +602,7 @@ function showNewSlide(index, duration, originalSize) {
     .easing(TWEEN.Easing.Exponential.InOut)
     .onStart(function() {
       jSelectedSlide.removeClass('hidden');
+      jSelectedSlide.find('.content').removeClass('hidden');
     })
     .start();
 
