@@ -227,7 +227,11 @@ function init() {
       }
     }
   });
-
+ 
+  // bind event handler for restore init status button
+  $('#square-init').on('click', function() {
+    controls.reset();
+  });
 
 }
 
@@ -394,8 +398,6 @@ function transform(id, duration, dataIndex) {
     // if user is reviewing multiple slides
     if (!!!dataIndex) {
       $(object.element).removeClass('hidden');
-    } else {
-      // $(object.element).find('.content').addClass('hidden');
     }
 
 	  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,

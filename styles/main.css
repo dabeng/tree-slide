@@ -40,6 +40,15 @@ body {
   bottom: 10px;
 }
 
+#square-init {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background-color: white;
+}
+
 .navi-triangle {
   width: 0;
   height: 0;
