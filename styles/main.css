@@ -365,10 +365,15 @@ body {
 #catalogue-content {
   width: 100%;
   position: absolute;
-  top: 25px;
+  top: 23px;
   bottom: 0px;
-  overflow: hidden;
+  overflow: auto;
   color: white;
+  border-bottom-right-radius: 10px;
+}
+
+.jstree-default .jstree-node {
+  margin-left: 0px;
 }
 
 .jstree-default .jstree-hovered {

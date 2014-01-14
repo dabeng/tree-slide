@@ -649,7 +649,7 @@ function initCatalogue(slides) {
         'data' : catalogueDatasource
       } });
 
-      $('#catalogue-content').jScrollPane();
+      $('#catalogue-content').jScrollPane({"showArrows": true, "arrowScrollOnHover": true});
     });
 
 }
