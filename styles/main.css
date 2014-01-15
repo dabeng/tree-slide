@@ -381,24 +381,28 @@ body {
 }
 
 #catalogue-header .triangle-close {
-  border-top: 8px solid transparent;
+  border-top: 7px solid transparent;
   border-right: 12px solid rgba(0,0,0,1);
-  border-bottom: 8px solid transparent;
-  top: 3px;
+  border-bottom: 7px solid transparent;
+  top: 4px;
   right: 10px;
 }
 
 #catalogue-content {
   width: 100%;
   position: absolute;
-  top: 23px;
-  bottom: 0px;
+  top: 22px;
+  bottom: 22px;
   overflow: auto;
   color: white;
 }
 
-.jstree-default .jstree-node {
+#catalogue-content .jstree-node:nth-child(1) {
   margin-left: 0px;
+}
+
+.jstree-default .jstree-node {
+  margin-left: 15px;
 }
 
 .jstree-default .jstree-hovered {
@@ -433,10 +437,10 @@ body {
 }
 
 #effect-header .triangle-close {
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
   border-left: 12px solid rgba(0,0,0,1);
-  top: 3px;
+  top: 4px;
   left: 10px;
 }
 

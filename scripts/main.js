@@ -63,18 +63,64 @@ function init() {
 
   // bind event handlers for the catalogue panel of slides
   $('#triangle-catalogue').on('click', function() {
-    $('#catalogue').animate({'left': '0px'}, 'fast');
+    var _this = this;
+    $('#catalogue').animate({'left': '0px'}, 'fast', function() {
+      $(_this).addClass('hidden');
+    });
   });
   $('#catalogue-header .triangle-close').on('click', function() {
-    $('#catalogue').animate({'left': '-200px'}, 'fast');
+    $('#catalogue').animate({'left': '-200px'}, 'fast', function() {
+      $('#triangle-catalogue').removeClass('hidden'); 
+    });
   });
+  $('#catalogue-content').on({
+    'after_open.jstree after_close.jstree': function (e, data) {
+      $('#catalogue-content').data('jsp').reinitialise();
+    }
+  });
+  $(window.document).on({
+      'click': function(event) {
+        var id = $(this).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+        if (jContainer.is('.rootSlide')) {
+          if (id !== jFirstSlide.prop('id')) {
+            var parentId = findParentNodeId(id, objects);
+            jFirstSlide.addClass('hidden');
+            transform(parentId, 500);
+            $('#' + id).addClass('highlight');
+            jContainer.prop('className', 'reviewSlide');
+          }
+        } else if (jContainer.is('.reviewSlide')) {
+          $('.highlight').removeClass('highlight');
+          $('.slide').not('.hidden').addClass('hidden');
+          if (id === jFirstSlide.prop('id')) {
+            jFirstSlide.removeClass('hidden');
+            jContainer.prop('className', 'rootSlide');
+            restoreInitPosition(jFirstSlide.prop('id'));
+          } else {
+            var parentId = findParentNodeId(id, objects);
+            transform(parentId, 500);
+            jContainer.prop('className', 'reviewSlide');
+            restoreInitPosition(id);
+          }
+        } else if (jContainer.is('.readSlide')) {
+
+        }
+      }
+    },
+    '#catalogue-content .jstree-anchor'
+  );
 
   // bind event handlers for effect configuration panel
   $('#triangle-effect').on('click', function() {
-    $('#effect').animate({'right': '0px'}, 'fast');
+    var _this = this;
+    $('#effect').animate({'right': '0px'}, 'fast', function() {
+      $(_this).addClass('hidden');
+    });
   });
   $('#effect-header .triangle-close').on('click', function() {
-    $('#effect').animate({'right': '-200px'}, 'fast');
+    $('#effect').animate({'right': '-200px'}, 'fast', function() {
+      $('#triangle-effect').removeClass('hidden');
+    });
   });
   $("input[name='multiple-slides-effects']").on('change',function() {
     if (jContainer.is('.reviewSlide')) {
@@ -632,16 +678,13 @@ function initCatalogue(slides) {
 
   $.when(loopGenerateCatalogueNode(catalogueDatasource, slides.children, slides.id))
     .done(function() {
-      $('#catalogue-content').on('after_open.jstree after_close.jstree', function (e, data) {
-        $('#catalogue-content').data('jsp').reinitialise();
-      })
-      .on('open_node.jstree changed.jstree', function (e, data) {
-        // e.stopPropagation();
-      })
-      .jstree({ 'core' : {
-        'data' : catalogueDatasource
-      } });
-
+      // instantiate a tree-catalogue for slides
+      $('#catalogue-content').jstree({'core' : {
+          'data' : catalogueDatasource
+        } 
+      });
+       
+      // instantiate a scrollbar for the tree-catalogue
       $('#catalogue-content').jScrollPane({"showArrows": true, "arrowScrollOnHover": true});
     });
 
