@@ -11,10 +11,8 @@ var objects = {};
 var targets = {};
 
 $(function($){
-	
   init();
   animate();
-
 });
 
 function init() {
@@ -81,6 +79,7 @@ function init() {
   $(window.document).on({
       'click': function(event) {
         var id = $(this).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+        var randomSlideId = $('.slide').not('.hidden')[0].id;
         if (jContainer.is('.rootSlide')) {
           if (id !== jFirstSlide.prop('id')) {
             var parentId = findParentNodeId(id, objects);
@@ -92,16 +91,16 @@ function init() {
         } else if (jContainer.is('.reviewSlide')) {
           $('.highlight').removeClass('highlight');
           $('.slide').not('.hidden').addClass('hidden');
+          $('#' + id).addClass('highlight');
           if (id === jFirstSlide.prop('id')) {
             jFirstSlide.removeClass('hidden');
             jContainer.prop('className', 'rootSlide');
-            restoreInitPosition(jFirstSlide.prop('id'));
           } else {
             var parentId = findParentNodeId(id, objects);
             transform(parentId, 500);
             jContainer.prop('className', 'reviewSlide');
-            restoreInitPosition(id);
           }
+          restoreInitPosition(findParentNodeId(randomSlideId, objects));
         } else if (jContainer.is('.readSlide')) {
 
         }
@@ -440,13 +439,11 @@ function transform(id, duration, dataIndex) {
 
 	  new TWEEN.Tween(object.position).to({x: target.position.x, y: target.position.y,
 	    z: target.position.z}, Math.random() * duration + duration)
-	    .easing(TWEEN.Easing.Exponential.InOut)
-      .start();
+	    .easing(TWEEN.Easing.Exponential.InOut).start();
 
 	  new TWEEN.Tween(object.rotation).to({x: target.rotation.x, y: target.rotation.y,
 	    z: target.rotation.z}, Math.random() * duration + duration)
-	    .easing(TWEEN.Easing.Exponential.InOut)
-      .start();
+	    .easing(TWEEN.Easing.Exponential.InOut).start();
     if (dataIndex >= 0 && i === dataIndex) {
       new TWEEN.Tween({'width': 800, 'height': 600})
         .to({'width': targets[id].size.width, 'height': targets[id].size.height}, duration)
@@ -459,8 +456,7 @@ function transform(id, duration, dataIndex) {
             $(slide.element).removeClass('hidden');
           });
           $(objects[id][dataIndex].element).find('.content').addClass('hidden');
-        })
-        .start();
+        }).start();
     }
   }
 
@@ -527,8 +523,7 @@ function readSlide(index, duration, originalSize) {
       // fit into render area by HEIGHT
       new TWEEN.Tween(object.position)
         .to({x: 0, y: 0, z: cameraDist - (window.innerHeight / 2) / Math.tan(fov / 2 * pi)}, duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
-        .start();
+        .easing(TWEEN.Easing.Exponential.InOut).start();
       new TWEEN.Tween({'width': originalSize.width, 'height': originalSize.height})
         .to({'width': 800, 'height': 600}, duration)
         .easing(TWEEN.Easing.Exponential.InOut)
@@ -536,14 +531,9 @@ function readSlide(index, duration, originalSize) {
           $(object.element).css({'width': this.width, 'height': this.height});
       })
       .start();
-      new TWEEN.Tween(object.rotation)
-        .to({x: 0, y: 0, z: 0}, duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
-        .start();
-      new TWEEN.Tween(window)
-        .to({}, duration * 2)
-        .onUpdate(render)
-        .start();
+      new TWEEN.Tween(object.rotation).to({x: 0, y: 0, z: 0}, duration)
+        .easing(TWEEN.Easing.Exponential.InOut).start();
+      new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
     }
   };
 }
@@ -575,7 +565,6 @@ function turnToNewSlide(type, originalSize) {
   }
 }
 
-
 function hideCurrentSlide(index, duration, originalSize) {
   var randomSlideId = $('.slide').not('.hidden')[0].id;
   var parentSlideId = findParentNodeId(randomSlideId, objects);
@@ -600,21 +589,18 @@ function hideCurrentSlide(index, duration, originalSize) {
     .onComplete(function() {
       jSelectedSlide.addClass('hidden');
       jSelectedSlide.find('.content').addClass('hidden');
-    })
-    .start();
+    }).start();
 
   new TWEEN.Tween({'width': 800, 'height': 600})
     .to({'width': originalSize.width, 'height': originalSize.height}, duration)
     .easing(TWEEN.Easing.Exponential.InOut)
     .onUpdate(function() {
       $(object.element).css({'width': this.width, 'height': this.height});
-    })
-    .start();
+    }).start();
 
   new TWEEN.Tween(object.rotation)
     .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, duration)
-    .easing(TWEEN.Easing.Exponential.InOut)
-    .start();
+    .easing(TWEEN.Easing.Exponential.InOut).start();
 
   new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
 }
@@ -641,27 +627,18 @@ function showNewSlide(index, duration, originalSize) {
     .onStart(function() {
       jSelectedSlide.removeClass('hidden');
       jSelectedSlide.find('.content').removeClass('hidden');
-    })
-    .start();
+    }).start();
 
   new TWEEN.Tween({'width': originalSize.width, 'height': originalSize.height})
-    .to({'width': 800, 'height': 600}, duration)
-    .easing(TWEEN.Easing.Exponential.InOut)
+    .to({'width': 800, 'height': 600}, duration).easing(TWEEN.Easing.Exponential.InOut)
     .onUpdate(function() {
       $(object.element).css({'width': this.width, 'height': this.height});
-    })
-    .start();
+    }).start();
 
-  new TWEEN.Tween(object.rotation)
-    .to({x: 0, y: 0, z: 0}, duration)
-    .easing(TWEEN.Easing.Exponential.InOut)
-    .start();
+  new TWEEN.Tween(object.rotation).to({x: 0, y: 0, z: 0}, duration)
+    .easing(TWEEN.Easing.Exponential.InOut).start();
 
-  new TWEEN.Tween(window)
-    .to({}, duration * 2)
-    .onUpdate(render)
-    .start();
-
+  new TWEEN.Tween(window).to({}, duration * 2).onUpdate(render).start();
 }
 
 function toggleControlsActive() {

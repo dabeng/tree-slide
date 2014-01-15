@@ -397,7 +397,7 @@ body {
   color: white;
 }
 
-#catalogue-content .jstree-node:nth-child(1) {
+.jstree-container-ul>li.jstree-node {
   margin-left: 0px;
 }
 
