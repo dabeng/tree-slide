@@ -116,13 +116,13 @@ function init() {
           // perform double-click action
 
           if (jContainer.is('.rootSlide')) {
-              transform($('#' + $(event.target).closest('.jstree-node').prop('id')).closest('.jstree-node').prop('id').replace(/cn/,'ui'), 10);
-              jContainer.prop('className', 'reviewSlide');
+            var parentSlideId = $('#catalogue-content').jstree(true)
+              .get_parent($(event.target).closest('.jstree-node')[0]).replace(/cn/, 'ui');
+              transform(parentSlideId, 10);
               $('#' + id).dblclick();
           } else if (jContainer.is('.reviewSlide')) {
             if ($('#' + id).is('.hidden')) {
               transform($('#' + $(event.target).closest('.jstree-node').prop('id')).closest('.jstree-node').prop('id').replace(/cn/,'ui'), 10);
-              jContainer.prop('className', 'reviewSlide');
               $('#' + id).dblclick();
             } else {
               $('#' + id).dblclick();
