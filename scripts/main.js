@@ -78,35 +78,68 @@ function init() {
   });
   $(window.document).on({
       'click': function(event) {
-        var id = $(this).closest('.jstree-node').prop('id').replace(/cn/,'ui');
-        var randomSlideId = $('.slide').not('.hidden')[0].id;
-        if (jContainer.is('.rootSlide')) {
-          if (id !== jFirstSlide.prop('id')) {
-            var parentId = findParentNodeId(id, objects);
-            jFirstSlide.addClass('hidden');
-            transform(parentId, 500);
-            $('#' + id).addClass('highlight');
-            jContainer.prop('className', 'reviewSlide');
+        event.data.clicks++;
+        if(event.data.clicks === 1) {
+          event.data.timer = setTimeout(function() {
+          var id = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          var randomSlideId = $('.slide').not('.hidden')[0].id;
+          if (jContainer.is('.rootSlide')) {
+            if (id !== jFirstSlide.prop('id')) {
+              var parentId = findParentNodeId(id, objects);
+              jFirstSlide.addClass('hidden');
+              transform(parentId, 500);
+              $('#' + id).addClass('highlight');
+              jContainer.prop('className', 'reviewSlide');
+            }
+          } else if (jContainer.is('.reviewSlide')) {
+            $('.highlight').removeClass('highlight');
+            $('.slide').not('.hidden').addClass('hidden');
+            if (id === jFirstSlide.prop('id')) {
+              jFirstSlide.removeClass('hidden');
+              jContainer.prop('className', 'rootSlide');
+            } else {
+              $('#' + id).addClass('highlight');
+              var parentId = findParentNodeId(id, objects);
+              transform(parentId, 500);
+              jContainer.prop('className', 'reviewSlide');
+            }
+            restoreInitPosition(findParentNodeId(randomSlideId, objects));
+          } else if (jContainer.is('.readSlide')) {
+          
           }
-        } else if (jContainer.is('.reviewSlide')) {
-          $('.highlight').removeClass('highlight');
-          $('.slide').not('.hidden').addClass('hidden');
-          $('#' + id).addClass('highlight');
-          if (id === jFirstSlide.prop('id')) {
-            jFirstSlide.removeClass('hidden');
-            jContainer.prop('className', 'rootSlide');
-          } else {
-            var parentId = findParentNodeId(id, objects);
-            transform(parentId, 500);
-            jContainer.prop('className', 'reviewSlide');
-          }
-          restoreInitPosition(findParentNodeId(randomSlideId, objects));
-        } else if (jContainer.is('.readSlide')) {
+          $(event.target).blur();
+           event.data.clicks = 0;
+        }, 300);
+        } else {
+          clearTimeout(event.data.timer);// prevent single-click action
+          var id = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          // perform double-click action
 
+          if (jContainer.is('.rootSlide')) {
+              transform($('#' + $(event.target).closest('.jstree-node').prop('id')).closest('.jstree-node').prop('id').replace(/cn/,'ui'), 10);
+              jContainer.prop('className', 'reviewSlide');
+              $('#' + id).dblclick();
+          } else if (jContainer.is('.reviewSlide')) {
+            if ($('#' + id).is('.hidden')) {
+              transform($('#' + $(event.target).closest('.jstree-node').prop('id')).closest('.jstree-node').prop('id').replace(/cn/,'ui'), 10);
+              jContainer.prop('className', 'reviewSlide');
+              $('#' + id).dblclick();
+            } else {
+              $('#' + id).dblclick();
+            }
+          } else if (jContainer.is('.readSlide')) {
+
+          }
+          event.data.clicks = 0;// after action performed, reset counter
+          $(event.target).blur();
         }
+      },
+      'dblclick': function(event) {
+        $(event.target).blur();
       }
     },
-    '#catalogue-content .jstree-anchor'
+    '#catalogue-content .jstree-anchor',
+    {"clicks": 0, "timer": {}}
   );
 
   // bind event handlers for effect configuration panel
