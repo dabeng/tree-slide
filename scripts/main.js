@@ -61,16 +61,20 @@ function init() {
     jContainer.prop('className', 'reviewSlide');
   });
 
-  // bind event handlers for effect configuration panel
-  $('#effect').on('mouseenter', function() {
-    if(!$(this).is(':animated')) {
-      $(this).animate({'right': '0px'}, 'slow');
-    }
+  // bind event handlers for the catalogue panel of slides
+  $('#triangle-catalogue').on('click', function() {
+    $('#catalogue').animate({'left': '0px'}, 'fast');
   });
-  $('#effect').on('mouseleave', function() {
-    if(!$(this).is(':animated')) {
-      $(this).animate({'right': '-190px'}, 'slow');
-    }
+  $('#catalogue-header .triangle-close').on('click', function() {
+    $('#catalogue').animate({'left': '-200px'}, 'fast');
+  });
+
+  // bind event handlers for effect configuration panel
+  $('#triangle-effect').on('click', function() {
+    $('#effect').animate({'right': '0px'}, 'fast');
+  });
+  $('#effect-header .triangle-close').on('click', function() {
+    $('#effect').animate({'right': '-200px'}, 'fast');
   });
   $("input[name='multiple-slides-effects']").on('change',function() {
     if (jContainer.is('.reviewSlide')) {
@@ -83,19 +87,6 @@ function init() {
     $(this).blur();
   });
 
-  
-  // bind event handlers for the catalogue panel of slides
-  $('#catalogue').on('mouseenter', function() {
-    if(!$(this).is(':animated')) {
-      $(this).animate({'left': '0px'}, 'slow');
-    }
-  });
-  $('#catalogue').on('mouseleave', function() {
-    if(!$(this).is(':animated')) {
-      $(this).animate({'left': '-190px'}, 'slow');
-    }
-  });
-
   // animation effect of navigation panel
   var animationEndHandler = {
     'webkitAnimationEnd': function() {$(this).css('-webkit-animation-play-state', 'paused');},
@@ -105,7 +96,6 @@ function init() {
   $('#triangle-up-effect').on(animationEndHandler);
   $('#triangle-right-effect').on(animationEndHandler);
   $('#triangle-down-effect').on(animationEndHandler);
-
 
   //
   $(window).on('resize', onWindowResize);
@@ -644,6 +634,9 @@ function initCatalogue(slides) {
     .done(function() {
       $('#catalogue-content').on('after_open.jstree after_close.jstree', function (e, data) {
         $('#catalogue-content').data('jsp').reinitialise();
+      })
+      .on('open_node.jstree changed.jstree', function (e, data) {
+        // e.stopPropagation();
       })
       .jstree({ 'core' : {
         'data' : catalogueDatasource

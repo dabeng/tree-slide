@@ -32,6 +32,24 @@ body {
   background-image: url("../images/logo.jpg");
 }
 
+#triangle-catalogue {
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 10px solid rgba(255,255,255,1);
+  top: 50%;
+  left: 5px;
+  margin: -10px 0 0 -5px;
+}
+
+#triangle-effect {
+  border-top: 20px solid transparent;
+  border-right: 10px solid rgba(255,255,255,1);
+  border-bottom: 20px solid transparent;
+  top: 50%;
+  right: 5px;
+  margin: -10px -5px 0 0px;
+}
+
 #navigatePanel {
   height: 80px;
   width: 80px;
@@ -49,7 +67,7 @@ body {
   background-color: white;
 }
 
-.navi-triangle {
+.triangle {
   width: 0;
   height: 0;
   position: absolute;
@@ -343,10 +361,10 @@ body {
 /* table of contents of the slides */
 #catalogue {
   position: absolute;
-  width: 200px;
+  width: 199px;
   height: 600px;
   top: 50%;
-  left: -190px;
+  left: -200px;
   margin: -300px 0;
   border: solid white;
   border-width: 1px 1px 1px 0px;
@@ -362,6 +380,14 @@ body {
   text-align: center;
 }
 
+#catalogue-header .triangle-close {
+  border-top: 8px solid transparent;
+  border-right: 12px solid rgba(0,0,0,1);
+  border-bottom: 8px solid transparent;
+  top: 3px;
+  right: 10px;
+}
+
 #catalogue-content {
   width: 100%;
   position: absolute;
@@ -369,7 +395,6 @@ body {
   bottom: 0px;
   overflow: auto;
   color: white;
-  border-bottom-right-radius: 10px;
 }
 
 .jstree-default .jstree-node {
@@ -388,10 +413,10 @@ body {
 /* configuration panel for the slides */
 #effect {
   position: absolute;
-  width: 200px;
+  width: 199px;
   height: 600px;
   top: 50%;
-  right: -190px;
+  right: -200px;
   margin: -300px 0;
   border: solid white;
   border-width: 1px 0px 1px 1px;
@@ -405,6 +430,14 @@ body {
   border-width: 2px 0px 2px 2px;
   border-radius: 10px 0px 0px 0px;
   text-align: center;
+}
+
+#effect-header .triangle-close {
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid rgba(0,0,0,1);
+  top: 3px;
+  left: 10px;
 }
 
 .effect-group li {
