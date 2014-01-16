@@ -81,54 +81,98 @@ function init() {
         event.data.clicks++;
         if(event.data.clicks === 1) {
           event.data.timer = setTimeout(function() {
-          var id = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          var clickedId = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
           var randomSlideId = $('.slide').not('.hidden')[0].id;
           if (jContainer.is('.rootSlide')) {
-            if (id !== jFirstSlide.prop('id')) {
-              var parentId = findParentNodeId(id, objects);
+            if (clickedId !== jFirstSlide.prop('id')) {
+              var parentId = findParentNodeId(clickedId, objects);
               jFirstSlide.addClass('hidden');
               transform(parentId, 500);
-              $('#' + id).addClass('highlight');
+              $('#' + clickedId).addClass('highlight');
               jContainer.prop('className', 'reviewSlide');
             }
           } else if (jContainer.is('.reviewSlide')) {
             $('.highlight').removeClass('highlight');
             $('.slide').not('.hidden').addClass('hidden');
-            if (id === jFirstSlide.prop('id')) {
+            if (clickedId === jFirstSlide.prop('id')) {
               jFirstSlide.removeClass('hidden');
               jContainer.prop('className', 'rootSlide');
             } else {
-              $('#' + id).addClass('highlight');
-              var parentId = findParentNodeId(id, objects);
+              $('#' + clickedId).addClass('highlight');
+              var parentId = findParentNodeId(clickedId, objects);
               transform(parentId, 500);
               jContainer.prop('className', 'reviewSlide');
             }
             restoreInitPosition(findParentNodeId(randomSlideId, objects));
           } else if (jContainer.is('.readSlide')) {
-          
+            var currentSlideId = $('.currentSlide')[0].id;
+            var currentParentId = findParentNodeId(currentSlideId, objects);
+            if(clickedSlideId !== currentSlideId) {
+              if (clickedSlideId === jFirstSlide.prop('id')) {
+
+              } else {
+                
+              }
+            }
           }
           $(event.target).blur();
            event.data.clicks = 0;
         }, 300);
         } else {
           clearTimeout(event.data.timer);// prevent single-click action
-          var id = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          var clickedSlideId = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          var parentSlideId = $('#catalogue-content').jstree(true)
+            .get_parent($(event.target).closest('.jstree-node')[0]).replace(/cn/, 'ui');
           // perform double-click action
-
           if (jContainer.is('.rootSlide')) {
-            var parentSlideId = $('#catalogue-content').jstree(true)
-              .get_parent($(event.target).closest('.jstree-node')[0]).replace(/cn/, 'ui');
-              transform(parentSlideId, 10);
-              $('#' + id).dblclick();
+            transform(parentSlideId, 10);
+            $('#' + clickedSlideId).dblclick();
           } else if (jContainer.is('.reviewSlide')) {
-            if ($('#' + id).is('.hidden')) {
-              transform($('#' + $(event.target).closest('.jstree-node').prop('id')).closest('.jstree-node').prop('id').replace(/cn/,'ui'), 10);
-              $('#' + id).dblclick();
+            var randomSlideId = $('.slide').not('.hidden')[0].id;
+            $('.highlight').removeClass('highlight');
+            if (clickedSlideId === jFirstSlide.prop('id')) {
+              $('.slide').not('.hidden').addClass('hidden');
+              restoreInitPosition(findParentNodeId(randomSlideId, objects));
+              jFirstSlide.removeClass('hidden');
+              jContainer.prop('className', 'rootSlide');
             } else {
-              $('#' + id).dblclick();
+              if ($('#' + clickedSlideId).is('.hidden')) {
+                restoreInitPosition(findParentNodeId(randomSlideId, objects));
+                $('.slide').not('.hidden').addClass('hidden');
+                transform(parentSlideId, 10);
+                $('#' + clickedSlideId).dblclick();
+              } else {
+                $('#' + clickedSlideId).dblclick();
+              }
             }
           } else if (jContainer.is('.readSlide')) {
-
+            var currentSlideId = $('.currentSlide')[0].id;
+            var currentParentId = findParentNodeId(currentSlideId, objects);
+            if(clickedSlideId !== currentSlideId) {
+              $('.currentSlide').find('.content').addClass('hidden');
+              if (clickedSlideId === jFirstSlide.prop('id')) {
+                $('.highlight').removeClass('highlight');
+                $('.currentSlide').addClass('hidden')
+                  .css({"width": targets[currentParentId].size.width, "height": targets[currentParentId].size.height});
+                  restoreInitPosition(currentParentId);
+                  jFirstSlide.removeClass('hidden');
+                  jContainer.prop('className', 'rootSlide');
+              } else {
+                if (parentSlideId === currentParentId) {
+                  var originalSize = targets[parentSlideId].size;
+                  hideCurrentSlide($('.currentSlide').prop('data-index'), 500, originalSize);
+                  showNewSlide($('#' + clickedSlideId).prop('data-index'), 500, originalSize);
+                } else {
+                  $('.highlight').removeClass('highlight');
+                  $('.currentSlide').addClass('hidden')
+                    .css({"width": targets[currentParentId].size.width, "height": targets[currentParentId].size.height});
+                  restoreInitPosition(currentParentId);
+                  transform(parentSlideId, 10);
+                  jContainer.prop('className', 'reviewSlide');
+                  $('#' + clickedSlideId).dblclick();
+                }
+              }
+            }
           }
           event.data.clicks = 0;// after action performed, reset counter
           $(event.target).blur();
