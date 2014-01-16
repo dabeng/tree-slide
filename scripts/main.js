@@ -81,25 +81,25 @@ function init() {
         event.data.clicks++;
         if(event.data.clicks === 1) {
           event.data.timer = setTimeout(function() {
-          var clickedId = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          var clickedSlideId = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
           var randomSlideId = $('.slide').not('.hidden')[0].id;
           if (jContainer.is('.rootSlide')) {
-            if (clickedId !== jFirstSlide.prop('id')) {
-              var parentId = findParentNodeId(clickedId, objects);
+            if (clickedSlideId !== jFirstSlide.prop('id')) {
+              var parentId = findParentNodeId(clickedSlideId, objects);
               jFirstSlide.addClass('hidden');
               transform(parentId, 500);
-              $('#' + clickedId).addClass('highlight');
+              $('#' + clickedSlideId).addClass('highlight');
               jContainer.prop('className', 'reviewSlide');
             }
           } else if (jContainer.is('.reviewSlide')) {
             $('.highlight').removeClass('highlight');
             $('.slide').not('.hidden').addClass('hidden');
-            if (clickedId === jFirstSlide.prop('id')) {
+            if (clickedSlideId === jFirstSlide.prop('id')) {
               jFirstSlide.removeClass('hidden');
               jContainer.prop('className', 'rootSlide');
             } else {
-              $('#' + clickedId).addClass('highlight');
-              var parentId = findParentNodeId(clickedId, objects);
+              $('#' + clickedSlideId).addClass('highlight');
+              var parentId = findParentNodeId(clickedSlideId, objects);
               transform(parentId, 500);
               jContainer.prop('className', 'reviewSlide');
             }
@@ -109,7 +109,12 @@ function init() {
             var currentParentId = findParentNodeId(currentSlideId, objects);
             if(clickedSlideId !== currentSlideId) {
               if (clickedSlideId === jFirstSlide.prop('id')) {
-
+                $('.highlight').removeClass('highlight');
+                $('.currentSlide').addClass('hidden')
+                  .css({"width": targets[currentParentId].size.width, "height": targets[currentParentId].size.height});
+                  restoreInitPosition(currentParentId);
+                  jFirstSlide.removeClass('hidden');
+                  jContainer.prop('className', 'rootSlide');
               } else {
                 
               }
