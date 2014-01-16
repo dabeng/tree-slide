@@ -12,3 +12,7 @@ It's a manufacture tool for 3D slides with the help of tree hierarchy.
 3. a variety of ingredients of the slides including plain text, hyper links, pictures, audios and videos.
 
 4. manufature your own slides absolutly offline.
+
+## Usage
+
+arrow keys, Esc key, Enter key and mouse wheel are available for you
