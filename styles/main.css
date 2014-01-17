@@ -58,13 +58,19 @@ body {
   bottom: 10px;
 }
 
-#square-init {
-  width: 20px;
-  height: 20px;
+#square-reset {
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: 27.5px;
+  left: 27.5px;
   background-color: white;
+  color: black;
+  font-size: 20px;
+  line-height: 25px;
+  padding-top: 2px;
+  text-align: center;
 }
 
 .triangle {

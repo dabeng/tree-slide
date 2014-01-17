@@ -346,7 +346,7 @@ function init() {
   });
  
   // bind event handler for restore init status button
-  $('#square-init').on('click', function() {
+  $('#square-reset').on('click', function() {
     if (jContainer.is('.reviewSlide')) {
       controls.reset();
     }
