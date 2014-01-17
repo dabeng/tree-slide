@@ -82,12 +82,12 @@ function init() {
         if(event.data.clicks === 1) {
           event.data.timer = setTimeout(function() {
           var clickedSlideId = $(event.target).closest('.jstree-node').prop('id').replace(/cn/,'ui');
+          var parentSlideId = findParentNodeId(clickedSlideId, objects);
           var randomSlideId = $('.slide').not('.hidden')[0].id;
           if (jContainer.is('.rootSlide')) {
             if (clickedSlideId !== jFirstSlide.prop('id')) {
-              var parentId = findParentNodeId(clickedSlideId, objects);
               jFirstSlide.addClass('hidden');
-              transform(parentId, 500);
+              transform(parentSlideId, 500);
               $('#' + clickedSlideId).addClass('highlight');
               jContainer.prop('className', 'reviewSlide');
             }
@@ -99,25 +99,25 @@ function init() {
               jContainer.prop('className', 'rootSlide');
             } else {
               $('#' + clickedSlideId).addClass('highlight');
-              var parentId = findParentNodeId(clickedSlideId, objects);
-              transform(parentId, 500);
+              transform(parentSlideId, 500);
               jContainer.prop('className', 'reviewSlide');
             }
             restoreInitPosition(findParentNodeId(randomSlideId, objects));
           } else if (jContainer.is('.readSlide')) {
             var currentSlideId = $('.currentSlide')[0].id;
             var currentParentId = findParentNodeId(currentSlideId, objects);
-            if(clickedSlideId !== currentSlideId) {
-              if (clickedSlideId === jFirstSlide.prop('id')) {
-                $('.highlight').removeClass('highlight');
-                $('.currentSlide').addClass('hidden')
-                  .css({"width": targets[currentParentId].size.width, "height": targets[currentParentId].size.height});
-                  restoreInitPosition(currentParentId);
-                  jFirstSlide.removeClass('hidden');
-                  jContainer.prop('className', 'rootSlide');
-              } else {
-                
-              }
+            $('.highlight').removeClass('highlight');
+            $('.currentSlide').addClass('hidden')
+              .css({"width": targets[currentParentId].size.width, "height": targets[currentParentId].size.height})
+              .find('.content').addClass('hidden');
+            restoreInitPosition(currentParentId);
+            if (clickedSlideId === jFirstSlide.prop('id')) {
+              jFirstSlide.removeClass('hidden');
+              jContainer.prop('className', 'rootSlide');
+            } else {
+              transform(parentSlideId, 500);
+              $('#' + clickedSlideId).addClass('highlight');
+              jContainer.prop('className', 'reviewSlide');
             }
           }
           $(event.target).blur();

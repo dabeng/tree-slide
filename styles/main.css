@@ -356,6 +356,7 @@ body {
 
 .sidebar {
   background-color: rgba(0,0,0,0.85);
+  font-size: 16px;
 }
 
 /* table of contents of the slides */
