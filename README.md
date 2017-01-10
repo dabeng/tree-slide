@@ -16,3 +16,6 @@ It's a manufacture tool for 3D slides with the help of tree hierarchy.
 ## Usage
 
 arrow keys, Esc key, Enter key and mouse wheel are available for you
+
+## [Demo](http://dabeng.github.io/tree-slide/)
+![snapshot](http://dabeng.github.io/tree-slide/images/snapshot.png)
